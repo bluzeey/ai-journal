@@ -1,0 +1,74 @@
+[
+  {
+    "description": "One click and an insightful tweet is posted on your behalf. This automation scrapes hacker news, finds the best post for your needs, reads it and tweets about it. ",
+    "key_operators": {
+      "Ask AI": ["ai.png", 1],
+      "Scrape Hacker News": ["hacker_news.png", 1],
+      "Summarizer": ["open-book.png", 1],
+      "Tweet": ["twitter.png", 1],
+      "Website Scraper": ["advanced_web_scraper.png", 1]
+    },
+    "name": "Autonomous Twitter Bot"
+  },
+  {
+    "description": "This automation reads your inbox and replies to each email with an AI generated message. ",
+    "key_operators": {
+      "Ask AI": ["ai.png", 1],
+      "OutlookReader": ["outlook.png", 1],
+      "OutlookSender": ["outlook.png", 1]
+    },
+    "name": "Email Auto-Replier"
+  },
+  {
+    "description": "Provides suggestions to enhance LinkedIn profiles based on industry standards.",
+    "key_operators": {
+      "Ask AI": ["ai.png", 1]
+    },
+    "name": "LinkedIn Profile Enhancer"
+  },
+  {
+    "description": "This automation reads all the emails in your inbox, categorizes them, and uses AI to generate a custom email body to reply to each email.",
+    "key_operators": {
+      "Ask AI": ["ai.png", 1],
+      "Ask AI - Single Value": ["ai.png", 1],
+      "Categorizer": ["abc.png", 1],
+      "GmailReader": ["gmail.png", 1],
+      "GmailSender": ["gmail.png", 1]
+    },
+    "name": "Gmail Categorizer and Response Generator"
+  },
+  {
+    "description": "Provides suggestions to enhance LinkedIn profiles based on industry standards.",
+    "key_operators": {
+      "Ask AI": ["ai.png", 1]
+    },
+    "name": "LinkedIn Profile Enhancer"
+  },
+  {
+    "description": "Processes a list of news articles, summarizes them and categorizes them using custom user defined categories. ",
+    "key_operators": {
+      "Categorizer": ["abc.png", 1],
+      "Summarizer": ["open-book.png", 1],
+      "Website Scraper": ["advanced_web_scraper.png", 1]
+    },
+    "name": "News Story Categorizer"
+  },
+  {
+    "description": "Upload your resume and enter the link to the job posting to have cover letters automatically written.",
+    "key_operators": {
+      "Ask AI": ["ai.png", 1],
+      "Website Scraper": ["advanced_web_scraper.png", 1]
+    },
+    "name": "Cover Letter Generator"
+  },
+  {
+    "description": "This automation takes in a link to a podcast and a topic of discussion. It fetches the most relevant snippets about that topic and writes an article about it. ",
+    "key_operators": {
+      "Ask AI": ["ai.png", 1],
+      "Get Youtube Transcript": ["youtube.png", 1],
+      "Google Docs Writer": ["gdocs.png", 1],
+      "Summarizer": ["open-book.png", 1]
+    },
+    "name": "Podcast Article Writer. "
+  }
+]
