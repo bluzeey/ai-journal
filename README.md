@@ -62,3 +62,7 @@ pnpm format:check
 ```bash
 pnpm format
 ```
+
+## Community
+
+Join our Discord community: [https://discord.gg/5DXkJHgG](https://discord.gg/5DXkJHgG)
