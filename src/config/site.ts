@@ -3,17 +3,17 @@ import { SiteConfig } from "@/types"
 import { env } from "@/env.mjs"
 
 export const siteConfig: SiteConfig = {
-  name: "Gumloop | AI Automation Framework",
+  name: "AI Journal",
   author: "Sahil Maheshwari",
   description:
-    "The no-code platform to build and host AI-powered business automations.",
-  keywords: ["AI Automation", "No-code", "Business Automation", "Gumloop"],
+    "An open-access AI journal dedicated to exploring advancements in AI, automation frameworks, and their impact across industries.",
+  keywords: ["AI Journal", "AI Research", "Automation"],
   url: {
-    base: "https://gumloop.com", // or env.NEXT_PUBLIC_APP_URL if needed
-    author: "https://gumloop.com",
+    base: "https://ai-journalling.vercel.app/", // Updated base URL
+    author: "https://ai-journalling.vercel.app/",
   },
   links: {
-    github: "https://github.com/gumloop", // Assuming there's a GitHub link
+    github: "https://github.com/bluzeey/ai-journal", // Updated GitHub link
   },
-  ogImage: "https://gumloop.com/images/link-preview.png",
+  ogImage: "https://ai-journalling.vercel.app/images/link-preview.png",
 }
