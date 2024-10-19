@@ -5,6 +5,7 @@ import { Inter, Sora } from "next/font/google"
 
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
+import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/theme-provider"
 
 const sora = Sora({ subsets: ["latin"] })
@@ -83,6 +84,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         >
           {children}
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   )
