@@ -1,88 +1,156 @@
+"use client"
+
 import React from "react"
 import Highlight from "@tiptap/extension-highlight"
 import TextAlign from "@tiptap/extension-text-align"
 import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 
-import "./styles.css" // Add your styles here for active buttons
+import { Button } from "@/components/ui/button"
 
 const MenuBar = ({ editor }) => {
   if (!editor) return null
 
   return (
-    <div className="menu-bar">
-      <button
+    <div className="flex flex-wrap gap-2 rounded-t-lg border-b border-gray-200 bg-gray-100 p-2">
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={editor.isActive("heading", { level: 1 }) ? "is-active" : ""}
+        className={
+          editor.isActive("heading", { level: 1 })
+            ? "bg-primary text-primary-foreground"
+            : ""
+        }
       >
-        h1
-      </button>
-      <button
+        H1
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={editor.isActive("heading", { level: 2 }) ? "is-active" : ""}
+        className={
+          editor.isActive("heading", { level: 2 })
+            ? "bg-primary text-primary-foreground"
+            : ""
+        }
       >
-        h2
-      </button>
-      <button
+        H2
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-        className={editor.isActive("heading", { level: 3 }) ? "is-active" : ""}
+        className={
+          editor.isActive("heading", { level: 3 })
+            ? "bg-primary text-primary-foreground"
+            : ""
+        }
       >
-        h3
-      </button>
-      <button
+        H3
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => editor.chain().focus().setParagraph().run()}
-        className={editor.isActive("paragraph") ? "is-active" : ""}
+        className={
+          editor.isActive("paragraph")
+            ? "bg-primary text-primary-foreground"
+            : ""
+        }
       >
-        paragraph
-      </button>
-      <button
+        P
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => editor.chain().focus().toggleBold().run()}
-        className={editor.isActive("bold") ? "is-active" : ""}
+        className={
+          editor.isActive("bold") ? "bg-primary text-primary-foreground" : ""
+        }
       >
-        bold
-      </button>
-      <button
+        B
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={editor.isActive("italic") ? "is-active" : ""}
+        className={
+          editor.isActive("italic") ? "bg-primary text-primary-foreground" : ""
+        }
       >
-        italic
-      </button>
-      <button
+        I
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => editor.chain().focus().toggleStrike().run()}
-        className={editor.isActive("strike") ? "is-active" : ""}
+        className={
+          editor.isActive("strike") ? "bg-primary text-primary-foreground" : ""
+        }
       >
-        strike
-      </button>
-      <button
+        S
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => editor.chain().focus().toggleHighlight().run()}
-        className={editor.isActive("highlight") ? "is-active" : ""}
+        className={
+          editor.isActive("highlight")
+            ? "bg-primary text-primary-foreground"
+            : ""
+        }
       >
-        highlight
-      </button>
-      <button
+        H
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => editor.chain().focus().setTextAlign("left").run()}
-        className={editor.isActive({ textAlign: "left" }) ? "is-active" : ""}
+        className={
+          editor.isActive({ textAlign: "left" })
+            ? "bg-primary text-primary-foreground"
+            : ""
+        }
       >
-        left
-      </button>
-      <button
+        Left
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => editor.chain().focus().setTextAlign("center").run()}
-        className={editor.isActive({ textAlign: "center" }) ? "is-active" : ""}
+        className={
+          editor.isActive({ textAlign: "center" })
+            ? "bg-primary text-primary-foreground"
+            : ""
+        }
       >
-        center
-      </button>
-      <button
+        Center
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => editor.chain().focus().setTextAlign("right").run()}
-        className={editor.isActive({ textAlign: "right" }) ? "is-active" : ""}
+        className={
+          editor.isActive({ textAlign: "right" })
+            ? "bg-primary text-primary-foreground"
+            : ""
+        }
       >
-        right
-      </button>
-      <button
+        Right
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => editor.chain().focus().setTextAlign("justify").run()}
-        className={editor.isActive({ textAlign: "justify" }) ? "is-active" : ""}
+        className={
+          editor.isActive({ textAlign: "justify" })
+            ? "bg-primary text-primary-foreground"
+            : ""
+        }
       >
-        justify
-      </button>
+        Justify
+      </Button>
     </div>
   )
 }
@@ -102,9 +170,12 @@ const RichTextEditor = ({ initialContent, onChange }) => {
   })
 
   return (
-    <div className="editor-container">
+    <div className="editor-container rounded-lg border shadow-sm">
       <MenuBar editor={editor} />
-      <EditorContent editor={editor} />
+      <EditorContent
+        editor={editor}
+        className="min-h-[200px] p-4 focus:outline-none"
+      />
     </div>
   )
 }
