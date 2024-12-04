@@ -1,6 +1,5 @@
 import Link from "next/link"
 import { BookOpen, Brain, Lightbulb, Sparkles } from "lucide-react"
-import Visualizer from "next-route-visualizer"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -10,8 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import Footer from "@/components/ui/footer"
 import Testimonial from "@/components/ui/testimonials"
+import Footer from "@/components/home/footer"
 
 export default function LandingPage() {
   return (
@@ -46,7 +45,6 @@ export default function LandingPage() {
       </header>
 
       <main className="flex-1 bg-white">
-        <Visualizer />
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">

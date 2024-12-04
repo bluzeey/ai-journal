@@ -5,7 +5,7 @@ import { useCompletion } from "ai/react"
 import { Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import RichTextEditor from "@/components/textEditor"
+import TextEditor from "@/components/texteditor/Index"
 
 export default function AIJournal() {
   const [journalEntry, setJournalEntry] = useState("")
@@ -23,10 +23,7 @@ export default function AIJournal() {
   return (
     <div className="mx-auto max-w-4xl p-4">
       <h2>AI Journal</h2>
-      <RichTextEditor
-        initialContent="<p>Start writing your thoughts...</p>"
-        onChange={setJournalEntry}
-      />
+      <TextEditor />
       <Button onClick={handleAnalyze}>Analyze Entry</Button>
     </div>
   )
