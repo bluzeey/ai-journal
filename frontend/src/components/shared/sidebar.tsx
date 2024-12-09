@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 
 const navItems = [
-  { icon: Home, label: "Home", href: "/" },
+  { icon: Home, label: "Home", href: "/dashboard" },
   { icon: Book, label: "Journal", href: "/journal" },
   { icon: PieChart, label: "Insights", href: "/insights" },
   { icon: Trophy, label: "Gamification", href: "/gamification" },
@@ -28,19 +28,19 @@ export function PrimarySidebar() {
         <ul className="space-y-1 p-2">
           {navItems.map(({ icon: Icon, label, href }) => (
             <li key={label}>
-              <Button
-                variant="ghost"
-                className={cn(
-                  "w-full justify-start",
-                  activeItem === label && "bg-gray-100"
-                )}
-                onClick={() => setActiveItem(label)}
-              >
-                <Link href={href} className="flex items-center">
+              <Link href={href} className="flex items-center">
+                <Button
+                  variant="ghost"
+                  className={cn(
+                    "w-full justify-start",
+                    activeItem === label && "bg-gray-100 text-blue-500"
+                  )}
+                  onClick={() => setActiveItem(label)}
+                >
                   <Icon className="mr-3 h-5 w-5" />
                   {label}
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             </li>
           ))}
         </ul>

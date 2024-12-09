@@ -1,7 +1,7 @@
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 
-import Flow from "./flow"
+import Flow from "../home/flow"
 
 export default function Hero(): JSX.Element {
   return (

@@ -12,7 +12,7 @@ import "@xyflow/react/dist/style.css"
 
 import { useCallback, useState } from "react"
 
-import CustomNode from "./heronode" // Import the custom node
+import CustomNode from "../ui/heronode" // Import the custom node
 
 // Define your edges
 

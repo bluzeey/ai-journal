@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react"
 import Link from "next/link"
+import { createClient } from "@/utils/supabase/server"
 import { BookOpen, Brain, Lightbulb, Sparkles } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -13,6 +15,25 @@ import Testimonial from "@/components/ui/testimonials"
 import Footer from "@/components/home/footer"
 
 export default function LandingPage() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+
+  const [session, setSession] = useState(null)
+  useEffect(() => {
+    const currentSession = supabase.auth.session()
+    setSession(currentSession)
+
+    const subscription = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session ? session : null)
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [supabase])
+
   return (
     <div className="flex min-h-screen flex-col bg-white text-gray-800">
       <header className="flex h-14 items-center px-4 lg:px-6">
