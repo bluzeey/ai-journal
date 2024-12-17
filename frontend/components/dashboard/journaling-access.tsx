@@ -1,16 +1,33 @@
-import Link from "next/link"
-import { PenSquare } from "lucide-react"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useEffect, useState } from "react"; // Import useEffect and useState
+import Link from "next/link";
+import { PenSquare } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { createClient } from "@/utils/supabase/client"; // Use your Supabase client
 
 export function JournalingAccess() {
-  // This would be fetched from the user's recent entries
-  const recentEntries = [
-    { id: 1, title: "Reflections on a Productive Day", date: "2023-06-10" },
-    { id: 2, title: "Overcoming Challenges", date: "2023-06-09" },
-    { id: 3, title: "Gratitude Journal", date: "2023-06-08" },
-  ]
+  const [recentEntries, setRecentEntries] = useState([]); // State to hold fetched entries
+  const supabase = createClient(); // Initialize Supabase client
+
+  useEffect(() => {
+    const fetchRecentEntries = async () => {
+      const { data, error } = await supabase
+        .from("journal_entries") // Fetch from your journal entries table
+        .select("id, title, date") // Select the fields you need
+        .order("date", { ascending: false }) // Order by date desc
+        .limit(5); // Limit to recent 5 entries
+
+      if (error) {
+        console.error("Error fetching recent entries:", error);
+      } else {
+        setRecentEntries(data); // Set the fetched entries to state
+      }
+    };
+
+    fetchRecentEntries(); // Call the fetch function
+  }, [supabase]);
 
   return (
     <Card>
@@ -33,7 +50,9 @@ export function JournalingAccess() {
                   href={`/journal/${entry.id}`}
                   className="text-sm hover:underline"
                 >
-                  {entry.title} - {entry.date}
+                  {entry.title} -{" "}
+                  {new Date(entry.date).toLocaleDateString("en-US")}{" "}
+                  {/* Format the date */}
                 </Link>
               </li>
             ))}
@@ -41,5 +60,5 @@ export function JournalingAccess() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

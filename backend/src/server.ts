@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
-import OpenAI from "openai";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
 import dotenv from "dotenv"; // Import the OpenAI library
+import { ChatOpenAI } from "@langchain/openai";
 // Add this import
 require("dotenv").config();
 const app = express();
@@ -8,7 +9,15 @@ app.use(express.json());
 
 // Ensure that the server can parse JSON request bodies
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY }); // Initialize OpenAI client
+const openai = new ChatOpenAI({ model: "gpt-4o-mini" });
+
+const systemTemplate =
+  "Analyze the journal entry and act as a therapist and advisor and give some tough love.";
+
+const promptTemplate = ChatPromptTemplate.fromMessages([
+  ["system", systemTemplate],
+  ["user", "{text}"],
+]); // Initialize OpenAI client
 
 // New route to interact with OpenAI
 app.post("/openai/chat", async (req: Request, res: Response) => {
