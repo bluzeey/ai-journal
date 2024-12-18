@@ -23,6 +23,7 @@
     "@supabase/supabase-js": "latest",
     "ai": "^4.0.18",
     "autoprefixer": "10.4.20",
+    "axios": "^1.7.9",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "geist": "^1.2.1",

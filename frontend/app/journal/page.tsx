@@ -21,6 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import JournalSidebar from "@/components/journal/sidebar"; // Import default
 import { PrimarySidebar } from "@/components/shared/sidebar";
 import { createClient } from "@/utils/supabase/client";
+import axios from "axios";
 
 export default function JournalEditor() {
   const [title, setTitle] = useState("");
@@ -29,7 +30,7 @@ export default function JournalEditor() {
   const [wordCount, setWordCount] = useState<Number | null>(null);
   const [mood, setMood] = useState("");
   const [loading, setLoading] = useState(false);
-  const [userId, setUserId] = useState<number | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
   // State to hold the selected entry
   const [selectedEntry, setSelectedEntry] = useState(null);
@@ -140,9 +141,41 @@ export default function JournalEditor() {
     }
   };
 
-  const handleAIInsights = () => {
-    console.log("Generating AI insights");
-    // Implement AI insights functionality
+  const handleAIInsights = async () => {
+    if (!userId || !selectedEntry) {
+      alert("User not authenticated or no entry selected.");
+      return;
+    }
+
+    setLoading(true); // Show loading state
+
+    try {
+      console.log(selectedEntry.id, userId);
+      const response = await axios.post("http://localhost:8000/api/insights", {
+        // Adjust the endpoint URL based on your backend route
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: {
+          entryId: selectedEntry.id, // Use the selected entry's ID
+          userId: userId, // Include the user ID for context
+        },
+      });
+
+      console.log(response);
+
+      if (response.statusText != "OK") {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      const { insight } = await response.data; // Access the insight received from the backend
+      alert(insight); // Display the insight to the user, you can also use a modal or a popup for a better UX
+    } catch (error) {
+      console.error("Error generating AI insights:", error);
+      alert("Failed to generate insights. Please try again later.");
+    } finally {
+      setLoading(false); // Reset loading state
+    }
   };
 
   return (

@@ -13,15 +13,17 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "nodemon": "^2.0.22",
     "ts-node": "^10.9.1",
     "typescript": "^5.7.2"
   },
   "dependencies": {
     "@langchain/openai": "^0.3.14",
-    "@supabase/supabase-js": "^2.46.2",
+    "@supabase/supabase-js": "^2.47.9",
     "@types/express": "^4.17.12",
     "@types/node": "^22.10.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.1",
     "openai": "^4.75.0"
