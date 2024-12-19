@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { signInAction } from "@/app/actions";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
@@ -13,8 +16,26 @@ import {
 } from "@/components/ui/card";
 import { Mail, Lock } from "lucide-react";
 
-export default async function Login(props: { searchParams: Promise<Message> }) {
-  const searchParams = await props.searchParams;
+export default function Login(props: { searchParams: Promise<Message> }) {
+  const [message, setMessage] = useState<Message | null>(null);
+
+  // Fetch and set the searchParams
+  useEffect(() => {
+    async function fetchParams() {
+      const params = await props.searchParams;
+      setMessage(params);
+    }
+
+    fetchParams();
+  }, [props.searchParams]);
+
+  // Handle form submission
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    await signInAction(formData);
+  };
+
   return (
     <div className="container mx-auto flex flex-col items-center justify-center min-h-screen p-4">
       <Card className="w-full max-w-md">
@@ -24,14 +45,7 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={async (event) => {
-              event.preventDefault();
-              const formData = new FormData(event.currentTarget);
-              await signInAction(formData);
-            }}
-          >
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium">
                 Email
@@ -78,10 +92,14 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
                 />
               </div>
             </div>
-            <SubmitButton type="submit" className="w-full">
+            <SubmitButton
+              pendingText="Signing In..."
+              formAction={signInAction}
+              className="w-full"
+            >
               Sign in
             </SubmitButton>
-            <FormMessage message={searchParams} />
+            {message && <FormMessage message={message} />}
           </form>
         </CardContent>
         <CardFooter className="flex flex-col items-center">

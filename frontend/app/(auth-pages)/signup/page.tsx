@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { signUpAction } from "@/app/actions";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
@@ -15,17 +18,33 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Mail, Lock } from "lucide-react";
 
-export default async function Signup(props: {
-  searchParams: Promise<Message>;
-}) {
-  const searchParams = await props.searchParams;
-  if ("message" in searchParams) {
+export default function Signup(props: { searchParams: Promise<Message> }) {
+  const [message, setMessage] = useState<Message | null>(null);
+
+  useEffect(() => {
+    async function fetchParams() {
+      const params = await props.searchParams;
+      if ("message" in params) {
+        setMessage(params);
+      }
+    }
+
+    fetchParams();
+  }, [props.searchParams]);
+
+  if (message) {
     return (
       <div className="w-full flex-1 flex items-center h-screen sm:max-w-md justify-center gap-2 p-4">
-        <FormMessage message={searchParams} />
+        <FormMessage message={message} />
       </div>
     );
   }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    await signUpAction(formData);
+  };
 
   return (
     <div className="container mx-auto flex flex-col items-center justify-center min-h-screen p-4">
@@ -36,14 +55,7 @@ export default async function Signup(props: {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={async (event) => {
-              event.preventDefault();
-              const formData = new FormData(event.currentTarget);
-              await signUpAction(formData);
-            }}
-          >
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium">
                 Email
@@ -90,7 +102,7 @@ export default async function Signup(props: {
             >
               Sign up
             </SubmitButton>
-            <FormMessage message={searchParams} />
+            <FormMessage message={message} />
           </form>
         </CardContent>
         <CardFooter className="flex flex-col items-center gap-4">
