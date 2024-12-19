@@ -6,9 +6,17 @@ import { PenSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/utils/supabase/client"; // Use your Supabase client
+import { JournalEntry } from "@/lib/definitions";
+
+type SimplifiedJournalEntry = Omit<
+  JournalEntry,
+  "snippet" | "content" | "tags" | "wordCount"
+>;
 
 export function JournalingAccess() {
-  const [recentEntries, setRecentEntries] = useState([]); // State to hold fetched entries
+  const [recentEntries, setRecentEntries] = useState<
+    SimplifiedJournalEntry[] | null
+  >(null); // State to hold fetched entries
   const supabase = createClient(); // Initialize Supabase client
 
   useEffect(() => {
@@ -44,7 +52,7 @@ export function JournalingAccess() {
         <div>
           <h3 className="mb-2 font-semibold">Recent Entries</h3>
           <ul className="space-y-2">
-            {recentEntries.map((entry) => (
+            {recentEntries?.map((entry) => (
               <li key={entry.id}>
                 <Link
                   href={`/journal/${entry.id}`}

@@ -5,17 +5,14 @@ import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { createClient } from "@/utils/supabase/client"; // Ensure this imports your Supabase client
+import { createClient } from "@/utils/supabase/client";
+import { JournalEntry } from "@/lib/definitions"; // Ensure this imports your Supabase client
 
-type JournalEntry = {
-  id: string;
-  title: string;
-  date: string;
-  snippet: string;
-  tags: string[];
-};
-
-export default function JournalSidebar({ onSelectEntry }) {
+export default function JournalSidebar({
+  onSelectEntry,
+}: {
+  onSelectEntry: (entry: JournalEntry) => void;
+}) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [entries, setEntries] = useState<JournalEntry[]>([]);
@@ -52,7 +49,7 @@ export default function JournalSidebar({ onSelectEntry }) {
   const filteredEntries = entries.filter(
     (entry) =>
       entry.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      entry.tags.some((tag) =>
+      entry.tags?.some((tag) =>
         tag.toLowerCase().includes(searchTerm.toLowerCase())
       )
   );
@@ -97,7 +94,7 @@ export default function JournalSidebar({ onSelectEntry }) {
                 <p className="text-sm text-gray-500">{entry.date}</p>
                 <p className="truncate text-sm">{entry.snippet}</p>
                 <div className="mt-2 flex flex-wrap">
-                  {entry.tags.map((tag) => (
+                  {entry.tags?.map((tag) => (
                     <span
                       key={tag}
                       className="mb-1 mr-1 rounded-full bg-gray-200 px-2 py-1 text-xs"

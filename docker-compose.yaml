@@ -1,0 +1,23 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000" # Maps port 3000 on host to port 3000 in the container
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - backend
+
+  # Expose PostgreSQL port for external connections if needed
+
+volumes:
+  postgres_data:

@@ -15,7 +15,6 @@ import { QuickStats } from "@/components/dashboard/quick-stats";
 import { UpcomingPrompts } from "@/components/dashboard/upcoming-prompts";
 import { WelcomeSection } from "@/components/dashboard/welcome-section";
 import { PrimarySidebar } from "@/components/shared/sidebar"; // Adjust the import path as necessary
-import TextEditor from "@/components/texteditor/Index";
 
 export default function Dashboard() {
   const [journalEntry, setJournalEntry] = useState("");

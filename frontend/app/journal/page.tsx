@@ -22,6 +22,7 @@ import JournalSidebar from "@/components/journal/sidebar"; // Import default
 import { PrimarySidebar } from "@/components/shared/sidebar";
 import { createClient } from "@/utils/supabase/client";
 import axios from "axios";
+import { JournalEntry } from "@/lib/definitions";
 
 export default function JournalEditor() {
   const [title, setTitle] = useState("");
@@ -33,7 +34,7 @@ export default function JournalEditor() {
   const [userId, setUserId] = useState<string | null>(null);
 
   // State to hold the selected entry
-  const [selectedEntry, setSelectedEntry] = useState(null);
+  const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -241,7 +242,8 @@ export default function JournalEditor() {
               </div>
               <span className="text-sm text-gray-500">
                 Word Count:{" "}
-                {wordCount ?? content?.split(/\s+/).filter(Boolean).length}
+                {(wordCount as number) ??
+                  content?.split(/\s+/).filter(Boolean).length}
               </span>
             </div>
             <div className="flex justify-between">
