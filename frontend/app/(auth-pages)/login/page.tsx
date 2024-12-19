@@ -92,11 +92,7 @@ export default function Login(props: { searchParams: Promise<Message> }) {
                 />
               </div>
             </div>
-            <SubmitButton
-              pendingText="Signing In..."
-              formAction={signInAction}
-              className="w-full"
-            >
+            <SubmitButton type="submit" className="w-full">
               Sign in
             </SubmitButton>
             {message && <FormMessage message={message} />}
