@@ -153,7 +153,7 @@ export default function JournalEditor() {
     try {
       console.log(selectedEntry.id, userId);
       const response = await axios.post(
-        "https://ai-journal.netlify.app/api/insights",
+        "https://ai-journal-backend.vercel.app/api/insights",
         {
           // Adjust the endpoint URL based on your backend route
           headers: {
