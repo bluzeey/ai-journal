@@ -40,7 +40,7 @@ export default function Signup(props: { searchParams: Promise<Message> }) {
     );
   }
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     await signUpAction(formData);
