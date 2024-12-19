@@ -18,6 +18,3 @@ services:
       - backend
 
   # Expose PostgreSQL port for external connections if needed
-
-volumes:
-  postgres_data:
