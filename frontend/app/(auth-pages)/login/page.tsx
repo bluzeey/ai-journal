@@ -24,7 +24,14 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form className="flex flex-col gap-4">
+          <form
+            className="flex flex-col gap-4"
+            onSubmit={async (event) => {
+              event.preventDefault();
+              const formData = new FormData(event.currentTarget);
+              await signInAction(formData);
+            }}
+          >
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium">
                 Email
@@ -71,11 +78,7 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
                 />
               </div>
             </div>
-            <SubmitButton
-              pendingText="Signing In..."
-              formAction={signInAction}
-              className="w-full"
-            >
+            <SubmitButton type="submit" className="w-full">
               Sign in
             </SubmitButton>
             <FormMessage message={searchParams} />
