@@ -152,16 +152,19 @@ export default function JournalEditor() {
 
     try {
       console.log(selectedEntry.id, userId);
-      const response = await axios.post("http://localhost:8000/api/insights", {
-        // Adjust the endpoint URL based on your backend route
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: {
-          entryId: selectedEntry.id, // Use the selected entry's ID
-          userId: userId, // Include the user ID for context
-        },
-      });
+      const response = await axios.post(
+        "https://ai-journal.netlify.app/api/insights",
+        {
+          // Adjust the endpoint URL based on your backend route
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: {
+            entryId: selectedEntry.id, // Use the selected entry's ID
+            userId: userId, // Include the user ID for context
+          },
+        }
+      );
 
       console.log(response);
 
