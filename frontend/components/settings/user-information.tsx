@@ -41,7 +41,7 @@ export function UserInformation() {
         // Fetch the user's profile from the 'profile' table
         const { data: profileData, error: profileError } = await supabase
           .from("profile")
-          .select("username, email, avatar_url") // Fetch username, email, and avatar_url fields
+          .select("username, email") // Fetch username, email, and avatar_url fields
           .eq("user_id", currentUser.id) // Match the user ID with the profile table
           .single(); // Fetch a single row
 
@@ -99,7 +99,10 @@ export function UserInformation() {
       <div className="flex items-center space-x-4">
         <Avatar className="h-24 w-24">
           <AvatarImage src={avatarUrl} alt="User" />
-          <AvatarFallback>U</AvatarFallback>
+          <AvatarFallback>
+            {username ? username.charAt(0) : "U"}
+          </AvatarFallback>{" "}
+          {/* Use the first letter of the username as fallback initials */}
         </Avatar>
         <Button onClick={handlePictureChange}>Change Picture</Button>
       </div>

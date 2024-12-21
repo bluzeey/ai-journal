@@ -1,8 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { createClient } from "@supabase/supabase-js";
+
+// Define valid topics that AI can choose from
+const validTopics = [
+  "Work",
+  "Relationships",
+  "Health",
+  "Growth",
+  "Travel",
+  "Creativity",
+  "Goals",
+  "Reflections",
+  "Gratitude",
+  "Thoughts",
+];
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -13,7 +26,7 @@ const supabase = createClient(
 // Initialize OpenAI client
 const openai = new ChatOpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  model: "gpt-4",
+  model: "gpt-4o-mini",
 });
 
 export async function POST(request: NextRequest) {
@@ -27,13 +40,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // AI analysis for tags and mood
+    // AI analysis for tags, mood, and topic
     const analysisPrompt = ChatPromptTemplate.fromMessages([
       [
         "system",
-        "Analyze the following journal entry. Provide 3-5 relevant tags and determine the overall mood of the entry. " +
+        "Analyze the following journal entry. Provide 3-5 relevant tags, determine the overall mood of the entry, and recommend a topic. " +
           "The mood must be one of the following values: 'happy', 'sad', 'angry', 'neutral', or 'excited'. " +
-          "Format your response as JSON with 'tags' (array of strings) and 'mood' (one of the specified values).",
+          "The topic must be one of these: 'Work', 'Relationships', 'Health', 'Growth', 'Travel', 'Creativity', 'Goals', 'Reflections', 'Gratitude', or 'Thoughts'. " +
+          "Format your response as JSON with 'tags' (array of strings), 'mood' (one of the specified values), and 'topic' (string) keys.",
       ],
       ["user", content],
     ]);
@@ -44,18 +58,18 @@ export async function POST(request: NextRequest) {
     let aiAnalysis;
 
     try {
-      // Do some cleanup on the result before parsing
+      // Clean up the result before parsing
       const rawResponse = String(result.content);
 
-      // Clean the JSON string to remove unwanted text
+      // Clean the JSON string to remove unwanted markdown formatting
       const jsonString = rawResponse.replace(/```json|```/g, "").trim(); // Remove Markdown formatting
 
       aiAnalysis = jsonString
         ? JSON.parse(jsonString)
-        : { tags: [], mood: "Unknown" }; // Parse the clean JSON
+        : { tags: [], mood: "Unknown", topic: "Unknown" }; // Default if parsing fails
     } catch (error) {
       console.error("Error parsing AI response:", error);
-      aiAnalysis = { tags: [], mood: "Unknown" }; // Default if parsing fails
+      aiAnalysis = { tags: [], mood: "Unknown", topic: "Unknown" }; // Default fallback
     }
 
     // Prepare the entry to be saved
@@ -65,6 +79,9 @@ export async function POST(request: NextRequest) {
       content,
       tags: Array.isArray(aiAnalysis.tags) ? aiAnalysis.tags : [], // Ensure tags is an array
       mood: typeof aiAnalysis.mood === "string" ? aiAnalysis.mood : "Unknown", // Ensure mood is a string
+      topic: validTopics.includes(aiAnalysis.topic)
+        ? aiAnalysis.topic
+        : "Other", // Validate topic
       date: date || new Date().toISOString(),
       word_count: content.split(/\s+/).filter(Boolean).length,
     };
