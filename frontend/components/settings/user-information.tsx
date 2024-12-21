@@ -53,7 +53,7 @@ export function UserInformation() {
         // Set the fetched values or defaults
         setUsername(profileData?.username || ""); // Optional default handling
         setEmail(profileData?.email || currentUser.email || ""); // Fallback to user's email if not in profile
-        setAvatarUrl(profileData?.avatar_url || "/placeholder-avatar.jpg"); // Set avatar URL
+        // setAvatarUrl(profileData?.avatar_url || "/placeholder-avatar.jpg"); // Set avatar URL
 
         setLoading(false); // Set loading to false when done
       }
