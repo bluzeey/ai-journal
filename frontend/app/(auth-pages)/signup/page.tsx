@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { signUpAction } from "@/app/actions";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
@@ -18,27 +18,29 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Mail, Lock } from "lucide-react";
 
-export default function Signup(props: { searchParams: Promise<Message> }) {
+export default function Signup({
+  searchParams,
+}: {
+  searchParams: {
+    error: any;
+    success: string;
+  };
+}) {
   const [message, setMessage] = useState<Message | null>(null);
 
   useEffect(() => {
-    async function fetchParams() {
-      const params = await props.searchParams;
-      if ("message" in params) {
-        setMessage(params);
+    const fetchParams = async () => {
+      const params = await searchParams;
+      if (params) {
+        if (params.success) {
+          setMessage({ message: decodeURIComponent(params.success) }); // Decode and set the success message
+        } else if (params?.error) {
+          setMessage({ message: decodeURIComponent(params.error) }); // Decode and set the success message
+        }
       }
-    }
-
+    };
     fetchParams();
-  }, [props.searchParams]);
-
-  if (message) {
-    return (
-      <div className="w-full flex-1 flex items-center h-screen sm:max-w-md justify-center gap-2 p-4">
-        <FormMessage message={message} />
-      </div>
-    );
-  }
+  }, [searchParams]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -102,7 +104,8 @@ export default function Signup(props: { searchParams: Promise<Message> }) {
             >
               Sign up
             </SubmitButton>
-            <FormMessage message={message} />
+            {message && <FormMessage message={message} />}{" "}
+            {/* Display message if available */}
           </form>
         </CardContent>
         <CardFooter className="flex flex-col items-center gap-4">
