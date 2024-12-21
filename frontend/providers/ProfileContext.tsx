@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { AuthUser } from "@supabase/supabase-js"; // Importing user types if needed for TypeScript
+import { redirect } from "next/navigation";
 
 interface ProfileContextType {
   points: number; // Points value managed in the context

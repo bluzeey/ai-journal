@@ -8,7 +8,8 @@ import React, {
   useCallback,
 } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { JournalEntry } from "@/lib/definitions"; // Adjust import path as necessary
+import { JournalEntry } from "@/lib/definitions";
+import { redirect } from "next/navigation"; // Adjust import path as necessary
 
 interface JournalContextType {
   totalEntries: number;
