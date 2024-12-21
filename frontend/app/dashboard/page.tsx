@@ -18,12 +18,15 @@ import { PrimarySidebar } from "@/components/shared/sidebar"; // Adjust the impo
 
 export default function Dashboard() {
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
+      {" "}
+      {/* Background for light and dark modes */}
       {/* Sidebar */}
       <PrimarySidebar />
-
       {/* Main Content */}
-      <div className="flex-1 bg-gray-100 p-4">
+      <div className="flex-1 p-4 bg-white dark:bg-gray-800">
+        {" "}
+        {/* Main content background */}
         <DashboardLayout>
           <div className="space-y-6">
             <WelcomeSection />

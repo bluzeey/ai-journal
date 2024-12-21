@@ -10,9 +10,9 @@ import { PrimarySidebar } from "@/components/shared/sidebar"; // Import PrimaryS
 
 export default function SettingsPage() {
   return (
-    <div className="flex h-screen w-full">
+    <div className="flex h-screen w-full bg-gray-100 dark:bg-gray-800">
       <PrimarySidebar /> {/* Add the PrimarySidebar here */}
-      <div className="flex h-screen flex-1 bg-gray-100">
+      <div className="flex h-screen flex-1 bg-gray-100 dark:bg-gray-800">
         <SettingsLayout>
           <UserInformation />
           {/* <JournalSettings /> */}
