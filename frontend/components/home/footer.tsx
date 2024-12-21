@@ -1,16 +1,16 @@
-import React from "react"
-import Link from "next/link"
+import React from "react";
+import Link from "next/link";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="flex justify-between border-t bg-white px-4 py-6 sm:flex-row md:px-6">
-      <p className="text-xs text-gray-600">
+    <footer className="flex max-w-5xl items-center gap-4 mx-auto justify-around -mt-20 px-4 py-6 md:px-6">
+      <p className="text-md text-white">
         © 2024 AI Journal. All rights reserved.
       </p>
-      <p className="text-center">Made with ❤️ from India</p>
+      <p className="text-md text-white">Made with ❤️ from India</p>
       <nav className="flex gap-4 sm:ml-auto sm:gap-6">
         <Link
-          className="text-xs text-gray-600 underline-offset-4 hover:underline"
+          className="text-md text-white underline-offset-4 hover:underline"
           href="https://discord.gg/5DXkJHgG"
         >
           <svg
@@ -27,20 +27,20 @@ const Footer: React.FC = () => {
           </svg>
         </Link>
         <Link
-          className="text-xs text-gray-600 underline-offset-4 hover:underline"
+          className="text-md text-white underline-offset-4 hover:underline"
           href="#"
         >
           Terms of Service
         </Link>
         <Link
-          className="text-xs text-gray-600 underline-offset-4 hover:underline"
+          className="text-md text-white underline-offset-4 hover:underline"
           href="#"
         >
           Privacy
         </Link>
       </nav>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

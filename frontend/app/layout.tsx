@@ -2,7 +2,7 @@ import DeployButton from "@/components/deploy-button";
 import { EnvVarWarning } from "@/components/env-var-warning";
 import HeaderAuth from "@/components/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { GeistSans } from "geist/font/sans";
+import { Manrope } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import Link from "next/link";
 import { JournalProvider } from "@/providers/JournalContext";
@@ -28,6 +28,8 @@ export const metadata = {
   keywords: "journaling, journal, write, reflection, notes",
 };
 
+const manrope = Manrope({ subsets: ["latin"] });
+
 export default function RootLayout({
   children,
 }: {
@@ -35,7 +37,7 @@ export default function RootLayout({
 }) {
   return (
     //TODO: Use theme switcher to add dark mode.
-    <html lang="en" className={GeistSans.className} suppressHydrationWarning>
+    <html lang="en" className={manrope.className} suppressHydrationWarning>
       <body className="bg-background text-foreground">
         <ThemeProvider
           attribute="class"
