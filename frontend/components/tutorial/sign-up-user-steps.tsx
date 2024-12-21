@@ -74,7 +74,7 @@ export default function SignUpUserSteps() {
         <p>
           Head over to the{" "}
           <Link
-            href="/sign-up"
+            href="/signup"
             className="font-bold hover:underline text-foreground/80"
           >
             Sign up
