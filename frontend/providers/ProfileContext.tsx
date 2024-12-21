@@ -1,58 +1,80 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import { createClient } from "@/utils/supabase/client";
 import { AuthUser } from "@supabase/supabase-js"; // Importing user types if needed for TypeScript
 
 interface ProfileContextType {
   points: number; // Points value managed in the context
   isLoggedIn: boolean; // Track login state
-  fetchProfile: () => void; // Function to fetch user profile
+  fetchProfile: () => Promise<void>; // Function to fetch user profile
   incrementPoints: () => Promise<void>; // Function to increment points
 }
 
+// Context creation
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [points, setPoints] = useState(0);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track logged-in state
-  const [user, setUser] = useState<AuthUser | null>(null); // Store user information
+  const [points, setPoints] = useState<number>(0);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [user, setUser] = useState<AuthUser | null>(null);
 
+  // Fetch user info and profile
+  const fetchUserAndProfile = useCallback(async () => {
+    const supabase = createClient();
+    const {
+      data: { user: currentUser },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error) {
+      console.error("Error fetching user:", error);
+      return;
+    }
+
+    setUser(currentUser); // Set user info
+    setIsLoggedIn(!!currentUser); // Update logged-in state
+
+    if (currentUser) {
+      await fetchProfile(currentUser.id); // Fetch profile if user is authenticated
+    } else {
+      resetProfile(); // Reset profile state if user is not authenticated
+    }
+  }, []);
+
+  // Effect to fetch user information on mount and on auth state change
   useEffect(() => {
-    const fetchUser = async () => {
-      const supabase = createClient();
-      const {
-        data: { user: currentUser },
-        error,
-      } = await supabase.auth.getUser();
+    fetchUserAndProfile(); // Fetch user data on mount and whenever user state changes
 
-      if (error) {
-        console.error("Error fetching user:", error);
-        return;
-      }
+    const { supabase } = createClient();
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      fetchUserAndProfile(); // Re-fetch user data upon login/logout
+    });
 
-      if (currentUser) {
-        setUser(currentUser); // Store user information
-        setIsLoggedIn(true);
-        await fetchProfile(currentUser.id); // Pass user ID to fetchProfile
-      } else {
-        setIsLoggedIn(false);
-      }
+    return () => {
+      subscription?.unsubscribe(); // Clean up subscription on unmount
     };
+  }, [fetchUserAndProfile]);
 
-    fetchUser();
-  }, []); // Run once on mount
-
+  // Fetch user profile based on user ID
   const fetchProfile = async (userId: string) => {
     const supabase = createClient();
 
     const { data, error } = await supabase
       .from("profile")
       .select("points")
-      .eq("user_id", userId) // Use the passed userId
-      .single(); // Get a single row
+      .eq("user_id", userId)
+      .single();
 
     if (error) {
       console.error("Error fetching user profile:", error);
@@ -60,20 +82,25 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     if (data) {
-      setPoints(data.points || 0); // Set points from the profile table
+      setPoints(data.points || 0); // Set points from the profile table or default to 0
     }
   };
 
+  // Reset profile information if user is not logged in
+  const resetProfile = () => {
+    setPoints(0);
+  };
+
+  // Increment user points
   const incrementPoints = async () => {
-    if (!user) return; // Ensure user is defined
+    if (!user) return; // Prevent increment if user is not logged in
 
     const supabase = createClient();
 
-    // Increment points by 100 and update in Supabase
     const { error } = await supabase
       .from("profile")
-      .update({ points: points + 100 }) // Update points
-      .eq("user_id", user.id); // Use user.id
+      .update({ points: points + 100 }) // Increment points
+      .eq("user_id", user.id);
 
     if (error) {
       console.error("Error updating points:", error);
@@ -87,7 +114,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         points,
         isLoggedIn,
-        fetchProfile: () => fetchProfile(user?.id!),
+        fetchProfile: () => (user ? fetchProfile(user.id) : Promise.resolve()), // Safe call
         incrementPoints,
       }}
     >
@@ -96,6 +123,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
+// Custom hook for context consumption
 export const useProfile = () => {
   const context = useContext(ProfileContext);
   if (!context) {
