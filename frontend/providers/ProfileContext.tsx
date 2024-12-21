@@ -54,7 +54,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     fetchUserAndProfile(); // Fetch user data on mount and whenever user state changes
 
-    const { supabase } = createClient();
+    const supabase = createClient();
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
