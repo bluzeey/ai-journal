@@ -30,6 +30,8 @@ export default function Signup({
       const params = await searchParams; // Await the promise for searchParams
       if (params.success) {
         setMessage({ message: decodeURIComponent(params.success) }); // Decode and set the success message
+      } else if (params.error) {
+        setMessage({ message: decodeURIComponent(params.error) });
       }
     };
 
