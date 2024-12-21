@@ -28,8 +28,8 @@ export default function LandingPage() {
         {/* Remaining sections unchanged */}
         <HowItWorks />
         <Cta />
+        <Footer />
       </main>
-      <Footer />
     </div>
   );
 }
