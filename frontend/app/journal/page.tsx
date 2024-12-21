@@ -14,6 +14,7 @@ import TextFormattingButtons from "@/components/journal/TextEditingButtons"; // 
 import TagsAndWordCount from "@/components/journal/TagsAndWordCount"; // Separate component for tags and word count
 import AIInsights from "@/components/journal/Insights"; // Separate component for AI insights
 import { useProfile } from "@/providers/ProfileContext"; // Assuming the profile context is available
+import { redirect } from "next/navigation";
 
 export default function JournalEditor() {
   const [title, setTitle] = useState("");
@@ -36,12 +37,14 @@ export default function JournalEditor() {
 
       if (error) {
         console.error("Error fetching user:", error);
+        redirect("/login");
       }
 
       if (user) {
         setUserId(user.id);
       } else {
         console.error("User not authenticated");
+        redirect("/login");
       }
     };
 
