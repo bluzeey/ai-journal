@@ -21,24 +21,18 @@ import { Mail, Lock } from "lucide-react";
 export default function Signup({
   searchParams,
 }: {
-  searchParams: {
-    error: any;
-    success: string;
-  };
+  searchParams: Promise<{ success?: string; error?: any }>;
 }) {
   const [message, setMessage] = useState<Message | null>(null);
 
   useEffect(() => {
     const fetchParams = async () => {
-      const params = await searchParams;
-      if (params) {
-        if (params.success) {
-          setMessage({ message: decodeURIComponent(params.success) }); // Decode and set the success message
-        } else if (params?.error) {
-          setMessage({ message: decodeURIComponent(params.error) }); // Decode and set the success message
-        }
+      const params = await searchParams; // Await the promise for searchParams
+      if (params.success) {
+        setMessage({ message: decodeURIComponent(params.success) }); // Decode and set the success message
       }
     };
+
     fetchParams();
   }, [searchParams]);
 
