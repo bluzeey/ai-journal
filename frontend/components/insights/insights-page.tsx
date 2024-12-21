@@ -1,27 +1,27 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Download } from "lucide-react"
+import { useState } from "react";
+import { Download } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
-import { ActivitySummary } from "./activity-summary"
-import { AIInsights } from "./ai-insights"
-import { ComparativeInsights } from "./comparaitive-insights"
-import { IntroSection } from "./intro-section"
-import { MoodAnalysis } from "./mood-analysis"
-import { TopicTrends } from "./topic-trends"
+import { ActivitySummary } from "./activity-summary";
+import { AIInsights } from "./ai-insights";
+import { ComparativeInsights } from "./comparaitive-insights";
+import { IntroSection } from "./intro-section";
+import { MoodAnalysis } from "./mood-analysis";
+import { TopicTrends } from "./topic-trends";
 
 export function InsightsPage() {
-  const [timeRange, setTimeRange] = useState("month")
+  const [timeRange, setTimeRange] = useState("month");
 
   return (
     <div className="container mx-auto space-y-6 p-6">
@@ -75,23 +75,23 @@ export function InsightsPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>AI-Generated Insights</CardTitle>
         </CardHeader>
         <CardContent>
           <AIInsights timeRange={timeRange} />
         </CardContent>
-      </Card>
+      </Card> */}
 
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>Comparative Insights</CardTitle>
         </CardHeader>
         <CardContent>
           <ComparativeInsights timeRange={timeRange} />
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
-  )
+  );
 }

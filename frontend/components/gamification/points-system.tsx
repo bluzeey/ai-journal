@@ -1,33 +1,34 @@
-import { Star } from "lucide-react"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useEffect, useState } from "react";
+import { Star } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useJournal } from "@/providers/JournalContext"; // Use the context for journal entries
+import { useProfile } from "@/providers/ProfileContext"; // Use the context for user points
 
 export function PointsSystem() {
-  const totalPoints = 1500
-  const recentActivities = [
-    {
-      activity: "Completed daily journal",
-      points: 10,
-      timestamp: "2023-05-15 09:30 AM",
-    },
-    {
-      activity: "Achieved weekly streak",
-      points: 50,
-      timestamp: "2023-05-14 11:45 PM",
-    },
-    {
-      activity: "Added mood entry",
-      points: 5,
-      timestamp: "2023-05-14 08:15 PM",
-    },
-  ]
+  const { points } = useProfile(); // Access points from ProfileContext
+  const { entries } = useJournal(); // Access journal entries from the context
+  const [recentActivities, setRecentActivities] = useState<any[]>([]); // Store recent activities
+
+  useEffect(() => {
+    // Transform the last entries into recent activities
+    const activities = entries
+      .slice(-5) // Get the last 5 entries
+      .map((entry, index) => ({
+        activity: entry.title, // Use the title of the journal entry
+        timestamp: new Date(entry.date).toDateString(), // Format the date for display without time
+      }));
+
+    setRecentActivities(activities); // Set the recent activities state
+  }, [entries]); // Trigger when entries change
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center">
           <Star className="mr-2 h-6 w-6 text-yellow-400" />
-          Points: {totalPoints}
+          Points: {points}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -35,8 +36,7 @@ export function PointsSystem() {
         <ul className="space-y-2">
           {recentActivities.map((activity, index) => (
             <li key={index} className="text-sm">
-              <span className="font-medium">{activity.activity}</span> - +
-              {activity.points} points
+              <span className="font-medium">{activity.activity}</span>
               <br />
               <span className="text-xs text-muted-foreground">
                 {activity.timestamp}
@@ -46,5 +46,5 @@ export function PointsSystem() {
         </ul>
       </CardContent>
     </Card>
-  )
+  );
 }

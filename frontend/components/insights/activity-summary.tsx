@@ -23,7 +23,7 @@ export function ActivitySummary({ timeRange }: { timeRange: string }) {
       const { data, error } = await supabase
         .from("journal_entries")
         .select("id, title, date")
-        .order("date", { ascending: false });
+        .order("date", { ascending: true });
 
       if (error) {
         console.error("Error fetching entries:", error);

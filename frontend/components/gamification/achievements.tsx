@@ -1,35 +1,70 @@
-import { Calendar, Star, Trophy, Zap } from "lucide-react"
+"use client";
 
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useEffect, useState } from "react";
+import { Calendar, Star, Trophy, Zap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useJournal } from "@/providers/JournalContext"; // Adjust based on your context path
 
 export function Achievements() {
-  const achievements = [
-    {
-      icon: Trophy,
-      label: "First Entry",
-      description: "Completed your first journal entry",
-      date: "2023-05-01",
-    },
-    {
-      icon: Star,
-      label: "Consistency Streak",
-      description: "Journaled for 7 days in a row",
-      date: "2023-05-10",
-    },
-    {
-      icon: Calendar,
-      label: "Monthly Milestone",
-      description: "Completed 30 entries in a month",
-      date: "2023-05-31",
-    },
-    {
-      icon: Zap,
-      label: "Insight Master",
-      description: "Received 10 AI-generated insights",
-      date: "2023-06-05",
-    },
-  ]
+  const { entries } = useJournal(); // Access journal entries from the context
+  const [achievements, setAchievements] = useState<any[]>([]); // Store achievements
+
+  useEffect(() => {
+    // Define achievements array
+    const allAchievements = [
+      {
+        count: 1,
+        icon: Trophy,
+        label: "First Entry",
+        description: "Completed your first journal entry",
+      },
+      {
+        count: 5,
+        icon: Star,
+        label: "5 Entries",
+        description: "Completed 5 journal entries",
+      },
+      {
+        count: 10,
+        icon: Calendar,
+        label: "10 Entries",
+        description: "Completed 10 journal entries",
+      },
+      {
+        count: 50,
+        icon: Zap,
+        label: "50 Entries",
+        description: "Completed 50 journal entries",
+      },
+    ];
+
+    // Track achieved milestones and the dates for each achievement
+    const earnedAchievements = allAchievements
+      .map((achievement) => {
+        const milestoneEntries = entries.filter((entry) => {
+          return (
+            entries.length >= achievement.count &&
+            entries.indexOf(entry) + 1 === achievement.count
+          ); // Check for the specific achievement count
+        });
+
+        if (milestoneEntries.length > 0) {
+          // Get the date of the last entry that met the milestone count
+          const achievementDate = new Date(
+            milestoneEntries[milestoneEntries.length - 1].date
+          )
+            .toISOString()
+            .split("T")[0];
+          return { ...achievement, date: achievementDate }; // Add the date to the achievement
+        }
+
+        return null;
+      })
+      .filter(Boolean); // Filter out null achievements
+
+    setAchievements(earnedAchievements);
+  }, [entries]); // Re-run when entries change
 
   return (
     <Card>
@@ -54,5 +89,5 @@ export function Achievements() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

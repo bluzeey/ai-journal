@@ -51,7 +51,7 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({
     const supabase = createClient();
     const { data, error } = await supabase
       .from("journal_entries")
-      .select("id, title, date, content, tags, word_count") // Adjust the fields based on your schema
+      .select("id, title, date, content, tags, word_count, mood") // Adjust the fields based on your schema
       .order("date", { ascending: false });
 
     if (error) {

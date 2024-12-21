@@ -56,16 +56,16 @@ export default function JournalSidebar({
 
   return (
     <div
-      className={`border-r bg-white transition-all duration-300 ${isCollapsed ? "w-16" : "w-64"}`}
+      className={`border-r bg-white dark:bg-gray-800 transition-all duration-300 ${isCollapsed ? "w-16" : "w-64"} border-gray-200 dark:border-gray-700`}
     >
-      <div className="flex items-center justify-between border-b p-4">
+      <div className="flex items-center justify-between border-b p-4 border-gray-200 dark:border-gray-700">
         {!isCollapsed && (
           <Input
             type="text"
             placeholder="Search entries..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="mr-2 w-full"
+            className="mr-2 w-full text-gray-900 bg-white dark:bg-gray-700 dark:text-white" // Adjust input colors
           />
         )}
         <Button
@@ -75,9 +75,9 @@ export default function JournalSidebar({
           aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {isCollapsed ? (
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-4 w-4 text-gray-600 dark:text-gray-300" />
           ) : (
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-4 w-4 text-gray-600 dark:text-gray-300" />
           )}
         </Button>
       </div>
@@ -85,19 +85,25 @@ export default function JournalSidebar({
         {filteredEntries.map((entry) => (
           <div
             key={entry.id}
-            className="cursor-pointer border-b p-4 hover:bg-gray-100"
+            className="cursor-pointer border-b p-4 hover:bg-gray-100 dark:hover:bg-gray-700" // Adjust hover styles for dark mode
             onClick={() => onSelectEntry(entry)} // Call the callback with the entry
           >
             {!isCollapsed && (
               <>
-                <h3 className="truncate font-semibold">{entry.title}</h3>
-                <p className="text-sm text-gray-500">{entry.date}</p>
-                <p className="truncate text-sm">{entry.snippet}</p>
+                <h3 className="truncate font-semibold text-gray-800 dark:text-gray-200">
+                  {entry.title}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {entry.date}
+                </p>
+                <p className="truncate text-sm text-gray-600 dark:text-gray-300">
+                  {entry.snippet}
+                </p>
                 <div className="mt-2 flex flex-wrap">
                   {entry.tags?.map((tag) => (
                     <span
                       key={tag}
-                      className="mb-1 mr-1 rounded-full bg-gray-200 px-2 py-1 text-xs"
+                      className="mb-1 mr-1 rounded-full bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-100 px-2 py-1 text-xs"
                     >
                       {tag}
                     </span>
@@ -107,7 +113,7 @@ export default function JournalSidebar({
             )}
             {isCollapsed && (
               <div className="flex justify-center">
-                <Search className="h-4 w-4 text-gray-400" />
+                <Search className="h-4 w-4 text-gray-400 dark:text-gray-200" />
               </div>
             )}
           </div>
