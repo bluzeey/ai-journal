@@ -118,7 +118,7 @@ export default function JournalEditor() {
 
         console.log("Entry deleted successfully");
         resetFields(); // Clear fields on successful delete
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error deleting entry:", error);
         alert("Failed to delete the journal entry.");
       }

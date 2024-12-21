@@ -5,5 +5,6 @@ export type JournalEntry = {
   snippet?: string;
   content: string;
   tags: string[];
+  mood?: string;
   wordCount: Number;
 };

@@ -9,9 +9,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-
 import { useEffect, useState } from "react";
-import { createClient } from "@/utils/supabase/client"; // Make sure the path is correct
+import { createClient } from "@/utils/supabase/client"; // Ensure the path is correct
 import { JournalEntry } from "@/lib/definitions"; // Ensure this imports your Supabase client
 
 export function ActivitySummary({ timeRange }: { timeRange: string }) {
@@ -28,17 +27,20 @@ export function ActivitySummary({ timeRange }: { timeRange: string }) {
       if (error) {
         console.error("Error fetching entries:", error);
       } else {
-        const formattedData = data.reduce((acc: any, entry: any) => {
-          const date = new Date(entry.date).toISOString().split("T")[0];
-          acc[date] = (acc[date] || 0) + 1; // Count entries per date
-          return acc;
-        }, {});
+        const formattedData = data.reduce(
+          (acc: { [key: string]: number }, entry: { date: string }) => {
+            const date = new Date(entry.date).toISOString().split("T")[0];
+            acc[date] = (acc[date] || 0) + 1; // Count entries per date, ensuring the value is a number
+            return acc;
+          },
+          {}
+        );
 
-        // Transform the object into an array for the chart
+        // Transform the object into an array for the chart using explicit type definition
         const chartData = Object.entries(formattedData).map(
           ([date, count]) => ({
             date,
-            count,
+            count: Number(count), // Ensure 'count' is treated as a number
           })
         );
 
