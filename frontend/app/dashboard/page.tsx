@@ -17,18 +17,6 @@ import { WelcomeSection } from "@/components/dashboard/welcome-section";
 import { PrimarySidebar } from "@/components/shared/sidebar"; // Adjust the import path as necessary
 
 export default function Dashboard() {
-  const [journalEntry, setJournalEntry] = useState("");
-  const [content, setContent] = useState(null);
-  const { complete, completion, isLoading } = useCompletion({
-    api: "/api/analyze",
-  });
-
-  const handleAnalyze = async () => {
-    if (journalEntry.trim()) {
-      await complete(journalEntry);
-    }
-  };
-
   return (
     <div className="flex h-screen">
       {/* Sidebar */}

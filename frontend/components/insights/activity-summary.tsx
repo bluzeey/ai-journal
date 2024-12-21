@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   CartesianGrid,
@@ -8,19 +8,47 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from "recharts"
+} from "recharts";
 
-const data = [
-  { date: "2023-05-01", count: 3 },
-  { date: "2023-05-02", count: 2 },
-  { date: "2023-05-03", count: 1 },
-  { date: "2023-05-04", count: 4 },
-  { date: "2023-05-05", count: 3 },
-  { date: "2023-05-06", count: 2 },
-  { date: "2023-05-07", count: 5 },
-]
+import { useEffect, useState } from "react";
+import { createClient } from "@/utils/supabase/client"; // Make sure the path is correct
+import { JournalEntry } from "@/lib/definitions"; // Ensure this imports your Supabase client
 
 export function ActivitySummary({ timeRange }: { timeRange: string }) {
+  const [data, setData] = useState<{ date: string; count: number }[]>([]);
+
+  useEffect(() => {
+    const fetchEntries = async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("journal_entries")
+        .select("id, title, date")
+        .order("date", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching entries:", error);
+      } else {
+        const formattedData = data.reduce((acc: any, entry: any) => {
+          const date = new Date(entry.date).toISOString().split("T")[0];
+          acc[date] = (acc[date] || 0) + 1; // Count entries per date
+          return acc;
+        }, {});
+
+        // Transform the object into an array for the chart
+        const chartData = Object.entries(formattedData).map(
+          ([date, count]) => ({
+            date,
+            count,
+          })
+        );
+
+        setData(chartData);
+      }
+    };
+
+    fetchEntries();
+  }, []); // Empty dependency array means this runs once on mount
+
   return (
     <div className="space-y-4">
       <div className="h-[200px]">
@@ -39,5 +67,5 @@ export function ActivitySummary({ timeRange }: { timeRange: string }) {
         consistent on weekends.
       </p>
     </div>
-  )
+  );
 }

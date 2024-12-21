@@ -44,9 +44,9 @@ export function JournalingAccess() {
       </CardHeader>
       <CardContent className="space-y-4">
         <Button asChild className="w-full">
-          <Link href="/journal/new">
+          <Link href="/journal">
             <PenSquare className="mr-2 h-4 w-4" />
-            Start Your Journal
+            Write Your Journal
           </Link>
         </Button>
         <div>

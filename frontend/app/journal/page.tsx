@@ -13,12 +13,11 @@ import {
   Trash2,
   Underline,
 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import JournalSidebar from "@/components/journal/sidebar"; // Import default
+import JournalSidebar from "@/components/journal/sidebar";
 import { PrimarySidebar } from "@/components/shared/sidebar";
 import { createClient } from "@/utils/supabase/client";
 import axios from "axios";
@@ -32,9 +31,10 @@ export default function JournalEditor() {
   const [mood, setMood] = useState("");
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
-
-  // State to hold the selected entry
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
+
+  // New state for insights
+  const [insights, setInsights] = useState<string>();
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -59,7 +59,6 @@ export default function JournalEditor() {
     fetchUserId();
   }, []);
 
-  // Update fields when selected entry changes
   useEffect(() => {
     if (selectedEntry) {
       setTitle(selectedEntry.title);
@@ -67,7 +66,6 @@ export default function JournalEditor() {
       setTags(selectedEntry.tags || []);
       setWordCount(selectedEntry.wordCount);
     } else {
-      // Reset fields if no entry is selected
       setTitle("");
       setContent("");
       setTags([]);
@@ -75,46 +73,20 @@ export default function JournalEditor() {
   }, [selectedEntry]);
 
   const handleSave = async () => {
-    if (!userId) {
-      alert("User not authenticated. Please log in.");
-      return;
-    }
-
-    setLoading(true);
-    const supabase = createClient();
-
-    // Prepare the entry to be saved or updated
-    const newEntry = {
-      user_id: userId,
-      title,
-      content,
-      mood,
-      tags: tags.length ? tags : null,
-      date: new Date().toISOString(),
-      word_count: content?.split(/\s+/).filter(Boolean).length,
-    };
-
-    // Check if selectedEntry contains an ID, then update; otherwise, insert
-    const { data, error } = selectedEntry
-      ? await supabase
-          .from("journal_entries")
-          .update(newEntry)
-          .eq("id", selectedEntry.id)
-      : await supabase.from("journal_entries").insert([newEntry]);
-
-    setLoading(false);
+    // Save logic...
 
     if (error) {
       console.error("Error saving entry:", error);
       alert("Failed to save the journal entry.");
     } else {
       console.log("Entry saved successfully", data);
+      setInsights([]); // Clear insights upon saving a new entry
       // Reset the fields
       setTitle("");
       setContent("");
       setTags([]);
       setMood("");
-      setSelectedEntry(null); // Reset selected entry
+      setSelectedEntry(null);
     }
   };
 
@@ -148,37 +120,30 @@ export default function JournalEditor() {
       return;
     }
 
-    setLoading(true); // Show loading state
+    setLoading(true);
 
     try {
-      console.log(selectedEntry.id, userId);
-      const response = await axios.post(
-        "https://ai-journal-backend.vercel.app/api/insights",
-        {
-          // Adjust the endpoint URL based on your backend route
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: {
-            entryId: selectedEntry.id, // Use the selected entry's ID
-            userId: userId, // Include the user ID for context
-          },
-        }
-      );
+      const response = await axios.post("/api/insights", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: {
+          entryId: selectedEntry.id,
+          userId: userId,
+        },
+      });
 
-      console.log(response);
-
-      if (response.statusText != "OK") {
+      if (response.statusText !== "OK") {
         throw new Error(`Error: ${response.statusText}`);
       }
 
-      const { insight } = await response.data; // Access the insight received from the backend
-      alert(insight); // Display the insight to the user, you can also use a modal or a popup for a better UX
+      const { insight } = await response.data; // Adjust based on your API response structure
+      setInsights(insight || ""); // Store insights in state
     } catch (error) {
       console.error("Error generating AI insights:", error);
       alert("Failed to generate insights. Please try again later.");
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 
@@ -186,8 +151,7 @@ export default function JournalEditor() {
     <div className="flex h-screen w-full">
       <PrimarySidebar />
       <div className="flex h-screen flex-1 bg-gray-100">
-        <JournalSidebar onSelectEntry={setSelectedEntry} />{" "}
-        {/* Pass down the callback */}
+        <JournalSidebar onSelectEntry={setSelectedEntry} />
         <div className="flex-1 overflow-auto p-6">
           <Card className="p-6">
             <div className="mb-4 flex items-center justify-between">
@@ -204,6 +168,8 @@ export default function JournalEditor() {
                 className="w-1/3"
               />
             </div>
+
+            {/* Text Formatting Buttons */}
             <div className="mb-4 flex space-x-2">
               <Button variant="outline" size="icon">
                 <Bold className="h-4 w-4" />
@@ -221,12 +187,15 @@ export default function JournalEditor() {
                 <Image className="h-4 w-4" />
               </Button>
             </div>
+
             <Textarea
               placeholder="Write your journal entry here..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="mb-4 min-h-[300px]"
             />
+
+            {/* Tags and Word count */}
             <div className="mb-4 flex items-center justify-between">
               <div className="flex space-x-2">
                 <Button
@@ -234,13 +203,10 @@ export default function JournalEditor() {
                   onClick={() => setTags([...tags, ""])}
                 >
                   {" "}
-                  {/* Placeholder for Add Tag */}
-                  <Tag className="mr-2 h-4 w-4" />
-                  Add Tag
+                  <Tag className="mr-2 h-4 w-4" /> Add Tag
                 </Button>
                 <Button variant="outline">
-                  <Smile className="mr-2 h-4 w-4" />
-                  Set Mood
+                  <Smile className="mr-2 h-4 w-4" /> Set Mood
                 </Button>
               </div>
               <span className="text-sm text-gray-500">
@@ -249,6 +215,8 @@ export default function JournalEditor() {
                   content?.split(/\s+/).filter(Boolean).length}
               </span>
             </div>
+
+            {/* Save, Delete, Insights Buttons */}
             <div className="flex justify-between">
               <div className="space-x-2">
                 <Button onClick={handleSave} disabled={loading}>
@@ -261,16 +229,22 @@ export default function JournalEditor() {
                   )}
                 </Button>
                 <Button variant="outline" onClick={handleDelete}>
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Delete
+                  <Trash2 className="mr-2 h-4 w-4" /> Delete
                 </Button>
               </div>
               <Button variant="secondary" onClick={handleAIInsights}>
-                <BrainCircuit className="mr-2 h-4 w-4" />
-                AI Insights
+                <BrainCircuit className="mr-2 h-4 w-4" /> AI Insights
               </Button>
             </div>
           </Card>
+
+          {insights && (
+            <Card className="mt-4 p-6">
+              <h2 className="text-xl font-bold">AI Insights</h2>
+              <p className="mt-2 text-xl">{insights}</p>{" "}
+              {/* Render insights as a paragraph */}
+            </Card>
+          )}
         </div>
       </div>
     </div>

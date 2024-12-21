@@ -1,12 +1,24 @@
-import { BookOpen, Calendar, Smile } from "lucide-react"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { BookOpen, Calendar, Smile } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useJournal } from "@/providers/JournalContext"; // Adjust to your context path
 
 export function QuickStats() {
-  // These values would be fetched from the user's data
-  const totalEntries = 42
-  const currentStreak = 7
-  const recentMood = "Happy"
+  const { totalEntries, currentStreak, recentMood, isLoggedIn } = useJournal();
+
+  if (!isLoggedIn) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Quick Stats</CardTitle>
+        </CardHeader>
+        <CardContent className="text-center">
+          <span>Please log in to see your statistics.</span>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
@@ -32,5 +44,5 @@ export function QuickStats() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

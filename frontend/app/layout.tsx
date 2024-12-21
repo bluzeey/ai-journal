@@ -5,6 +5,7 @@ import { ThemeSwitcher } from "@/components/theme-switcher";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
 import Link from "next/link";
+import { JournalProvider } from "@/providers/JournalContext";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -32,7 +33,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <JournalProvider>{children}</JournalProvider>
         </ThemeProvider>
       </body>
     </html>
