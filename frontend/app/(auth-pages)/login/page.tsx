@@ -16,18 +16,26 @@ import {
 } from "@/components/ui/card";
 import { Mail, Lock } from "lucide-react";
 
-export default function Login(props: { searchParams: Promise<Message> }) {
+export default function Login({
+  searchParams,
+}: {
+  searchParams: Promise<{ success?: string; error?: any }>;
+}) {
   const [message, setMessage] = useState<Message | null>(null);
 
   // Fetch and set the searchParams
   useEffect(() => {
-    async function fetchParams() {
-      const params = await props.searchParams;
-      setMessage(params);
-    }
+    const fetchParams = async () => {
+      const params = await searchParams; // Await the promise for searchParams
+      if (params.success) {
+        setMessage({ message: decodeURIComponent(params.success) }); // Decode and set the success message
+      } else if (params.error) {
+        setMessage({ message: decodeURIComponent(params.error) }); // Handle the error message
+      }
+    };
 
     fetchParams();
-  }, [props.searchParams]);
+  }, [searchParams]);
 
   // Handle form submission
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -87,6 +95,7 @@ export default function Login(props: { searchParams: Promise<Message> }) {
                   name="password"
                   type="password"
                   placeholder="Your password"
+                  minLength={6}
                   required
                   className="pl-10"
                 />
@@ -95,10 +104,11 @@ export default function Login(props: { searchParams: Promise<Message> }) {
             <SubmitButton type="submit" className="w-full">
               Sign in
             </SubmitButton>
-            {message && <FormMessage message={message} />}
+            {message && <FormMessage message={message} />}{" "}
+            {/* Display message if available */}
           </form>
         </CardContent>
-        <CardFooter className="flex flex-col items-center">
+        <CardFooter className="flex flex-col items-center gap-4">
           <p className="text-sm text-muted-foreground">
             Don't have an account?{" "}
             <Link
