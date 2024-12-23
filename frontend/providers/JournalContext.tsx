@@ -17,7 +17,7 @@ interface JournalContextType {
   recentMood: string;
   entries: JournalEntry[];
   isLoggedIn: boolean; // Add logged-in state
-  fetchEntries: () => Promise<void>; // Function to fetch entries
+  fetchEntries: (userId: string) => Promise<void>; // Function to fetch entries
 }
 
 const JournalContext = createContext<JournalContextType | undefined>(undefined);

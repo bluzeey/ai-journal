@@ -33,27 +33,25 @@ export function HowItWorks() {
   ];
 
   return (
-    <section
-      id="how-it-works"
-      className="bg-[#052750] dark:bg-gray-900 py-12 md:py-24 lg:py-32"
-    >
+    <section id="how-it-works" className="bg-[#031F40] py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
-        <h2 className="mb-12 text-center text-3xl font-bold tracking-tighter text-gray-800 dark:text-white sm:text-5xl">
+        <h2 className="mb-12 text-center text-3xl font-bold tracking-tighter text-white dark:text-white sm:text-5xl">
           How It Works
         </h2>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {steps.map((step, index) => (
-            <Card
+            <div
               key={index}
-              className="relative flex flex-col items-center p-6 bg-[#88BCFB] dark:bg-gray-800 rounded-lg"
+              className="relative flex flex-col items-center p-6 rounded-lg bg-cover bg-center"
+              style={{ backgroundImage: `url(${step.imageSrc})` }}
             >
               <div className="absolute top-0 left-0 right-0 bottom-0 bg-blue-500 opacity-30 rounded-lg" />{" "}
               {/* Background overlay */}
               <div className="relative z-10 text-center">
-                <h3 className="text-3xl font-semibold text-gray-800 dark:text-white">
+                <h3 className="text-3xl font-semibold text-white dark:text-white">
                   {step.title}
                 </h3>
-                <p className="mt-2 text-2xl text-[#88BCFB] font-normal ">
+                <p className="mt-2 py-4 text-2xl text-[#88BCFB] font-normal ">
                   {step.description}
                 </p>
               </div>
@@ -69,7 +67,7 @@ export function HowItWorks() {
                 {/* Create a square for numbers */}
                 {index + 1} {/* Display the index number (1-based) */}
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       </div>
