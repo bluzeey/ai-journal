@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { JournalEntry } from "@/lib/definitions";
-import { redirect } from "next/navigation"; // Adjust import path as necessary
+import { usePathname } from "next/navigation";
 
 interface JournalContextType {
   totalEntries: number;
@@ -29,31 +29,35 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({
   const [totalEntries, setTotalEntries] = useState(0);
   const [currentStreak, setCurrentStreak] = useState(0);
   const [recentMood, setRecentMood] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const pathname = usePathname();
 
   // Function to fetch user data and entries
   const fetchUserAndEntries = useCallback(async () => {
-    const supabase = createClient();
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
+    if (pathname != "/" && pathname != "/login") {
+      const supabase = createClient();
 
-    if (error) {
-      console.error("Error fetching user:", error);
-      return;
-    }
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
 
-    setIsLoggedIn(!!user); // Update logged-in state
-    if (user) {
-      await fetchEntries(user.id); // Fetch entries if user is logged in
-    } else {
-      setEntries([]); // Clear entries if user is not logged in
-      setTotalEntries(0);
-      setRecentMood("");
-      setCurrentStreak(0);
+      if (error) {
+        console.error("Error fetching user:", error);
+        return;
+      }
+
+      setIsLoggedIn(!!user);
+      if (user != null) {
+        await fetchEntries(user.id); // Fetch entries if user is logged in
+      } else {
+        setEntries([]); // Clear entries if user is not logged in
+        setTotalEntries(0);
+        setRecentMood("");
+        setCurrentStreak(0);
+      } // Update logged-in state
     }
-  }, []);
+  }, [pathname]);
 
   // Fetch journal entries from Supabase
   const fetchEntries = async (userId: string) => {

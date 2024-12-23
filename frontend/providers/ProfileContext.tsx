@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { AuthUser } from "@supabase/supabase-js"; // Importing user types if needed for TypeScript
-import { redirect } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 interface ProfileContextType {
   points: number; // Points value managed in the context
@@ -27,29 +27,32 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
   const [points, setPoints] = useState<number>(0);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<AuthUser | null>(null);
+  const pathname = usePathname();
 
   // Fetch user info and profile
   const fetchUserAndProfile = useCallback(async () => {
-    const supabase = createClient();
-    const {
-      data: { user: currentUser },
-      error,
-    } = await supabase.auth.getUser();
+    if (pathname != "/" && pathname != "/login") {
+      const supabase = createClient();
+      const {
+        data: { user: currentUser },
+        error,
+      } = await supabase.auth.getUser();
 
-    if (error) {
-      console.error("Error fetching user:", error);
-      return;
+      if (error) {
+        console.error("Error fetching user:", error);
+        return;
+      }
+
+      setUser(currentUser); // Set user info
+      setIsLoggedIn(!!currentUser); // Update logged-in state
+
+      if (currentUser) {
+        await fetchProfile(currentUser.id); // Fetch profile if user is authenticated
+      } else {
+        resetProfile(); // Reset profile state if user is not authenticated
+      }
     }
-
-    setUser(currentUser); // Set user info
-    setIsLoggedIn(!!currentUser); // Update logged-in state
-
-    if (currentUser) {
-      await fetchProfile(currentUser.id); // Fetch profile if user is authenticated
-    } else {
-      resetProfile(); // Reset profile state if user is not authenticated
-    }
-  }, []);
+  }, [pathname]);
 
   // Effect to fetch user information on mount and on auth state change
   useEffect(() => {
