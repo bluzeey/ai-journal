@@ -24,14 +24,11 @@ export default function GamificationPage() {
             <TasksAndGoals /> 
             */}
           </div>
-          <Achievements />
-
-          {/*
           Add leaderboard for all the users.
           <div className="grid gap-6 md:grid-cols-2">
+            <Achievements />
             <Leaderboard />
           </div>
-          */}
         </GamificationLayout>
       </div>
     </div>

@@ -46,7 +46,7 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({
 
     setIsLoggedIn(!!user); // Update logged-in state
     if (user) {
-      await fetchEntries(); // Fetch entries if user is logged in
+      await fetchEntries(user.id); // Fetch entries if user is logged in
     } else {
       setEntries([]); // Clear entries if user is not logged in
       setTotalEntries(0);
@@ -56,11 +56,12 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   // Fetch journal entries from Supabase
-  const fetchEntries = async () => {
+  const fetchEntries = async (userId: string) => {
     const supabase = createClient();
     const { data, error } = await supabase
       .from("journal_entries")
       .select("id, title, date, content, tags, word_count, mood")
+      .eq("user_id", userId)
       .order("date", { ascending: false });
 
     if (error) {
