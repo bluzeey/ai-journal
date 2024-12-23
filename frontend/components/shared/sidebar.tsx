@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Book, Home, PieChart, Settings, Trophy, User } from "lucide-react";
+import { usePathname } from "next/navigation"; // Import usePathname
 
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,19 +18,23 @@ const navItems = [
 ];
 
 export function PrimarySidebar() {
-  const [activeItem, setActiveItem] = useState("Home");
+  const pathname = usePathname(); // Get the current pathname
+  const [activeItem, setActiveItem] = useState(""); // Initialize active item
+
+  useEffect(() => {
+    // Set the active item based on the pathname
+    const activeNavItem = navItems.find((item) => item.href === pathname);
+    if (activeNavItem) {
+      setActiveItem(activeNavItem.label);
+    }
+  }, [pathname]); // Update whenever the pathname changes
 
   return (
     <div className="flex w-64 flex-col border-r bg-white dark:bg-gray-900">
-      {" "}
-      {/* Background for light and dark modes */}
       <div className="flex h-16 items-center justify-center border-b border-gray-200 dark:border-gray-700">
-        {" "}
-        {/* Border for light and dark modes */}
         <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
           AI Journal
-        </h1>{" "}
-        {/* Text color for light and dark modes */}
+        </h1>
       </div>
       <nav className="flex-1 overflow-y-auto">
         <ul className="space-y-1 p-2">
@@ -41,13 +46,12 @@ export function PrimarySidebar() {
                   className={cn(
                     "w-full justify-start",
                     activeItem === label
-                      ? "bg-gray-100 text-blue-500 dark:bg-gray-800 dark:text-blue-400" // Active item styles for light and dark modes
-                      : "hover:bg-gray-200 dark:hover:bg-gray-700" // Hover styles for light and dark modes
+                      ? "bg-gray-100 text-blue-500 dark:bg-gray-800 dark:text-blue-400"
+                      : "hover:bg-gray-200 dark:hover:bg-gray-700"
                   )}
                   onClick={() => setActiveItem(label)}
                 >
-                  <Icon className="mr-3 h-5 w-5 text-gray-500 dark:text-gray-400" />{" "}
-                  {/* Icon colors */}
+                  <Icon className="mr-3 h-5 w-5 text-gray-500 dark:text-gray-400" />
                   {label}
                 </Button>
               </Link>

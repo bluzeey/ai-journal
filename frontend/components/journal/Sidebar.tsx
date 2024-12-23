@@ -54,6 +54,20 @@ export default function JournalSidebar({
       )
   );
 
+  // Array of Tailwind CSS colors for random selection
+  const tagColors = [
+    "bg-blue-400",
+    "bg-green-400",
+    "bg-yellow-400",
+    "bg-pink-400",
+    "bg-orange-400",
+  ];
+
+  // Function to get random color class
+  const getRandomColor = () => {
+    return tagColors[Math.floor(Math.random() * tagColors.length)];
+  };
+
   return (
     <div
       className={`border-r bg-white dark:bg-gray-800 transition-all duration-300 ${isCollapsed ? "w-16" : "w-64"} border-gray-200 dark:border-gray-700`}
@@ -103,7 +117,7 @@ export default function JournalSidebar({
                   {entry.tags?.map((tag) => (
                     <span
                       key={tag}
-                      className="mb-1 mr-1 rounded-full bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-100 px-2 py-1 text-xs"
+                      className={`mb-1 mr-1 rounded-full text-white px-2 py-1 text-xs ${getRandomColor()}`}
                     >
                       {tag}
                     </span>
