@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client"; // Adjust import based on your setup
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -6,8 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
+// Define the User type for clarity
+interface User {
+  username: string;
+  points: number;
+}
+
 export function Leaderboard() {
-  const [topUsers, setTopUsers] = useState([]);
+  const [topUsers, setTopUsers] = useState<User[]>([]); // Specify the state type
   const [optedIn, setOptedIn] = useState(false); // State for the opt-in switch
 
   // Fetch user profiles from Supabase
