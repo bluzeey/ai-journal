@@ -51,7 +51,7 @@ export function TopicTrends({ timeRange }: { timeRange: string }) {
         <TabsTrigger value="cloud">Word Cloud</TabsTrigger>
         <TabsTrigger value="list">Topic List</TabsTrigger>
       </TabsList>
-      <TabsContent value="cloud" className="h-[300px]">
+      <TabsContent value="cloud" className="h-[150px]">
         <TagCloud
           minSize={12}
           maxSize={35}

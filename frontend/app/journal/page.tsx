@@ -178,7 +178,7 @@ export default function JournalEditor() {
           <Card className="p-6 bg-white dark:bg-gray-800">
             {" "}
             {/* Card background for light and dark modes */}
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex items-center justify-between gap-8">
               <Input
                 type="text"
                 placeholder="Entry Title (optional)"
@@ -189,7 +189,7 @@ export default function JournalEditor() {
               <Input
                 type="datetime-local"
                 defaultValue={new Date().toISOString().slice(0, 16)}
-                className="w-1/3 bg-white dark:bg-gray-700 dark:text-white"
+                className="w-1/5 bg-white dark:bg-gray-700 dark:text-white"
               />
             </div>
             {/* Text Formatting Buttons */}

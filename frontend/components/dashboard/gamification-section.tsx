@@ -8,7 +8,7 @@ import { useJournal } from "@/providers/JournalContext"; // Access journal entri
 
 // Define levels based on experience points for 10 levels
 const levels = [
-  { title: "Novice Journaler", xp: 0 },
+  { title: "Novice Journaler", xp: 100 },
   { title: "Beginner Journaler", xp: 200 },
   { title: "Intermediate Journaler", xp: 300 },
   { title: "Skilled Journaler", xp: 600 },
