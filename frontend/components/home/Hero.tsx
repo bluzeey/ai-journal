@@ -15,7 +15,7 @@ export default function HeroSection() {
         <Navbar />
       </div>
       <div className="">
-        <div className="absolute inset-0 bg-[#031F40] opacity-60" />{" "}
+        <div className="absolute inset-0 bg-[#031F40] opacity-65" />{" "}
         {/* Dark overlay for better text visibility */}
         <div className="relative z-10 text-center text-white">
           <h1 className="text-7xl font-regular mb-4">Unlock Your Mind with</h1>

@@ -9,7 +9,8 @@ export default function Cta() {
       className="relative flex items-center !text-white justify-center h-screen bg-cover bg-center"
       style={{ backgroundImage: `url(${bg.src})` }}
     >
-      <div className="absolute inset-0 bg-[#031F40] opacity-60" />{" "}
+      <div className="absolute inset-0 bg-[#031F40] opacity-65" />{" "}
+      <div className="absolute inset-0 bg-black opacity-20" />{" "}
       {/* Dark overlay for better text visibility */}
       <div className="relative z-10 text-center text-white">
         <h1 className="text-7xl font-semibold max-w-5xl mx-auto text-center font-regular mb-4">
