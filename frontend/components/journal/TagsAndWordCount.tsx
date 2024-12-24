@@ -15,7 +15,7 @@ export default function TagsAndWordCount({
   content,
 }: TagsAndWordCountProps) {
   return (
-    <div className="mb-4 flex items-center justify-between">
+    <div className="my-4  flex items-center justify-between">
       <div className="flex space-x-2">
         <Button variant="outline" onClick={() => setTags([...tags, ""])}>
           <Tag className="mr-2 h-4 w-4" /> Add Tag

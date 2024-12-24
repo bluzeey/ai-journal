@@ -19,7 +19,7 @@ export default function SettingsPage() {
           {/* <AIInsights /> */}
           {/* <NotificationSettings /> */}
           <AppearanceSettings />
-          <GamificationSettings />
+          {/* <GamificationSettings /> */}
           <LegalAndSupport />
         </SettingsLayout>
       </div>

@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import JournalSidebar from "@/components/journal/Sidebar";
 import { PrimarySidebar } from "@/components/shared/sidebar";
 import { createClient } from "@/utils/supabase/client";
@@ -15,6 +13,8 @@ import TagsAndWordCount from "@/components/journal/TagsAndWordCount"; // Separat
 import AIInsights from "@/components/journal/Insights"; // Separate component for AI insights
 import { useProfile } from "@/providers/ProfileContext"; // Assuming the profile context is available
 import { redirect } from "next/navigation";
+import JournalForm from "@/components/journal/Form";
+import JournalActions from "@/components/journal/SaveAndInsightsButtons";
 
 export default function JournalEditor() {
   const [title, setTitle] = useState("");
@@ -173,52 +173,28 @@ export default function JournalEditor() {
     <div className="flex h-screen w-full bg-gray-100 dark:bg-gray-900">
       <PrimarySidebar />
       <div className="flex h-screen flex-1">
+        {/* Work on improving adding new entry */}
         <JournalSidebar onSelectEntry={setSelectedEntry} />
         <div className="flex-1 overflow-auto p-6">
           <Card className="p-6 bg-white dark:bg-gray-800">
-            {" "}
-            {/* Card background for light and dark modes */}
-            <div className="mb-4 flex items-center justify-between gap-8">
-              <Input
-                type="text"
-                placeholder="Entry Title (optional)"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-2/3 text-2xl font-bold bg-white dark:bg-gray-700 dark:text-white"
-              />
-              <Input
-                type="datetime-local"
-                defaultValue={new Date().toISOString().slice(0, 16)}
-                className="w-1/5 bg-white dark:bg-gray-700 dark:text-white"
-              />
-            </div>
-            {/* Text Formatting Buttons */}
-            <TextFormattingButtons />
-            <Textarea
-              placeholder="Write your journal entry here..."
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="mb-4 min-h-[300px] bg-white dark:bg-gray-700 dark:text-white"
+            <JournalForm
+              title={title}
+              setTitle={setTitle}
+              content={content}
+              setContent={setContent}
+              tags={tags}
+              setTags={setTags}
             />
             {/* Tags and Word count */}
             <TagsAndWordCount tags={tags} setTags={setTags} content={content} />
-            {/* Save and Insights Button */}
-            <div className="flex justify-between">
-              <div className="space-x-2">
-                <Button onClick={handleSave} disabled={loading}>
-                  {loading ? "Saving..." : "Save"}
-                </Button>
-                <Button variant="outline" onClick={handleDelete}>
-                  <span>Delete</span>
-                </Button>
-              </div>
-              <Button variant="secondary" onClick={handleAIInsights}>
-                AI Insights
-              </Button>
-            </div>
+            <JournalActions
+              loading={loading}
+              handleSave={handleSave}
+              handleDelete={handleDelete}
+              handleAIInsights={handleAIInsights}
+            />
+            {insights && <AIInsights insights={insights} />}
           </Card>
-
-          {insights && <AIInsights insights={insights} />}
         </div>
       </div>
     </div>
