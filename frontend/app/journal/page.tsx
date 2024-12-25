@@ -64,19 +64,55 @@ export default function JournalEditor() {
     }
   }, [selectedEntry]);
 
-  const addNewEntry = () => {
-    const newEntry = {
-      id: Date.now().toString(), // Unique ID based on timestamp
-      title: "Untitled",
+  const addNewEntry = async () => {
+    if (!userId) {
+      alert("User not authenticated. Please log in.");
+      return;
+    }
+
+    const newEntry: JournalEntry = {
+      id: Date.now().toString(),
+      title: "New Entry", // Placeholder title
       date: new Date().toISOString(),
-      content: "", // Empty content to start
-      snippet: "", // Snippet for display
-      tags: [], // No tags initially
+      content: "", // Empty content
+      snippet: "", // Empty snippet for display
+      tags: [], // No tags by default
       wordCount: 0, // Zero word count
     };
 
+    // Optimistic UI update
     setEntries((prevEntries) => [newEntry, ...prevEntries]);
     setSelectedEntry(newEntry);
+
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase.from("journal_entries").insert([
+        {
+          user_id: userId,
+          title: newEntry.title,
+          date: newEntry.date,
+          content: newEntry.content,
+          tags: newEntry.tags,
+          mood: "Unknown",
+          topic: "Other",
+          word_count: newEntry?.wordCount || 0,
+        },
+      ]);
+
+      if (error) {
+        throw error;
+      }
+
+      console.log("Entry added to database", data);
+    } catch (error) {
+      console.error("Error adding entry to the database:", error);
+      alert("Failed to add the journal entry to the database.");
+
+      // Rollback UI update if database operation fails
+      setEntries((prevEntries) =>
+        prevEntries.filter((entry) => entry.id !== newEntry.id)
+      );
+    }
   };
 
   const handleSave = async () => {
