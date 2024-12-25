@@ -19,16 +19,21 @@ const generateRandomColor = () => {
   return tagColors[Math.floor(Math.random() * tagColors.length)];
 };
 
-export default function JournalSidebar({
-  onSelectEntry,
-  onAddEntry, // Function to notify parent to add a new entry
-}: {
+interface JournalSidebarProps {
+  entries: JournalEntry[];
+  setEntries: React.Dispatch<React.SetStateAction<JournalEntry[]>>;
   onSelectEntry: (entry: JournalEntry) => void;
-  onAddEntry: (entry: JournalEntry) => void; // Pass in this new prop
-}) {
+  onAddEntry: () => void;
+}
+
+export default function JournalSidebar({
+  entries,
+  setEntries,
+  onSelectEntry,
+  onAddEntry,
+}: JournalSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [tagColorsMap, setTagColorsMap] = useState<{ [key: string]: string }>(
     {}
   ); // To hold each tag's color
@@ -60,7 +65,7 @@ export default function JournalSidebar({
         // Generate and set tag colors for unique tags
         const colorsMap: { [key: string]: string } = {};
         formattedEntries.forEach((entry) => {
-          entry.tags.forEach((tag) => {
+          entry.tags.forEach((tag: string) => {
             if (!colorsMap[tag]) {
               colorsMap[tag] = generateRandomColor();
             }
@@ -83,21 +88,6 @@ export default function JournalSidebar({
   );
 
   // Function to handle adding a new entry with placeholder text
-  const handleAddEntry = () => {
-    const newEntry: JournalEntry = {
-      id: Date.now().toString(), // Unique ID based on timestamp
-      title: "Empty Title", // Placeholder title
-      date: new Date().toISOString(),
-      content: "Untitled Content", // Placeholder content
-      snippet: "Untitled Content", // Snippet for display
-      tags: [], // No tags by default
-      wordCount: 0, // Zero word count
-    };
-
-    setEntries((prevEntries) => [newEntry, ...prevEntries]); // Prepend to the entries
-    onAddEntry(newEntry); // Notify parent to add the entry
-  };
-
   return (
     <div
       className={`border-r bg-white dark:bg-gray-800 transition-all duration-300 ${isCollapsed ? "w-16" : "w-64"} border-gray-200 dark:border-gray-700`}
@@ -127,9 +117,9 @@ export default function JournalSidebar({
       </div>
       <div className="p-4">
         <Button
-          variant="primary"
+          variant="ghost"
           className="mb-4 flex items-center"
-          onClick={handleAddEntry} // Call handleAddEntry on click
+          onClick={onAddEntry} // Call handleAddEntry on click
         >
           <Plus className="mr-2" /> Add New Entry
         </Button>

@@ -24,6 +24,7 @@ export default function JournalEditor() {
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
   const [insights, setInsights] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [entries, setEntries] = useState<JournalEntry[]>([]);
 
   const { incrementPoints } = useProfile(); // Access incrementPoints from ProfileContext
 
@@ -62,6 +63,21 @@ export default function JournalEditor() {
       setTags([]);
     }
   }, [selectedEntry]);
+
+  const addNewEntry = () => {
+    const newEntry = {
+      id: Date.now().toString(), // Unique ID based on timestamp
+      title: "Untitled",
+      date: new Date().toISOString(),
+      content: "", // Empty content to start
+      snippet: "", // Snippet for display
+      tags: [], // No tags initially
+      wordCount: 0, // Zero word count
+    };
+
+    setEntries((prevEntries) => [newEntry, ...prevEntries]);
+    setSelectedEntry(newEntry);
+  };
 
   const handleSave = async () => {
     if (!userId) {
@@ -174,7 +190,12 @@ export default function JournalEditor() {
       <PrimarySidebar />
       <div className="flex h-screen flex-1">
         {/* Work on improving adding new entry */}
-        <JournalSidebar onSelectEntry={setSelectedEntry} />
+        <JournalSidebar
+          entries={entries}
+          setEntries={setEntries}
+          onAddEntry={addNewEntry}
+          onSelectEntry={setSelectedEntry}
+        />
         <div className="flex-1 overflow-auto p-6">
           <Card className="p-6 bg-white dark:bg-gray-800">
             <JournalForm
