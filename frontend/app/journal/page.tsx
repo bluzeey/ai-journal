@@ -207,7 +207,7 @@ export default function JournalEditor() {
       setInsights(insight || ""); // Store insights in state
     } catch (error) {
       console.error("Error generating AI insights:", error);
-      alert("Failed to generate insights. Please try again later.");
+      alert(`Failed to generate insights. Please try again later.${error}`);
     } finally {
       setLoading(false);
     }
