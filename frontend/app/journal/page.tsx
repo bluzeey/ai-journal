@@ -199,8 +199,8 @@ export default function JournalEditor() {
         },
       });
 
-      if (response.statusText !== "OK") {
-        throw new Error(`Error: ${response.statusText}`);
+      if (response.status !== 201) {
+        throw new Error(`Error: ${response.status}`);
       }
 
       const { insight } = await response.data; // Adjust based on your API response structure

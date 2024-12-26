@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
     const result = await openai.invoke(formattedPrompt);
     const insight = result.content || "No insight generated.";
 
-    return NextResponse.json({ insight });
+    return NextResponse.json({ insight }, { status: 201 });
   } catch (error) {
     console.error("Unexpected error:", error);
     return NextResponse.json(
