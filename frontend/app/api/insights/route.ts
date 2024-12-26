@@ -1,24 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Message as VercelChatMessage, Stre } from "ai";
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { createClient } from "@supabase/supabase-js";
+import { HttpResponseOutputParser } from "langchain/output_parsers";
 
 // Initialize Supabase client
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
+export const runtime = "edge";
 
-// Initialize OpenAI client
+// Initialize OpenAI client with streaming
 const openai = new ChatOpenAI({
   apiKey: process.env.OPENAI_API_KEY,
   model: "gpt-4o-mini",
+  streaming: true,
 });
 
 export async function POST(request: NextRequest) {
   try {
     const requestBody = await request.json();
-    const { entryId, userId } = requestBody.body;
+    console.log(requestBody.prompt);
+    const { entryId, userId } = JSON.parse(requestBody.prompt);
 
     if (!entryId || !userId) {
       return NextResponse.json(
@@ -81,7 +86,7 @@ export async function POST(request: NextRequest) {
       .join("\n\n");
     combinedEntriesText += "\n\n" + specificJournalEntry.content;
 
-    // Generate insight using OpenAI
+    // Generate insight using OpenAI with streaming
     const systemTemplate =
       "Analyze the provided journal entries, including past context, and act as a therapist and advisor. Provide holistic insights with tough love.";
 
@@ -94,10 +99,21 @@ export async function POST(request: NextRequest) {
       text: combinedEntriesText,
     });
 
-    const result = await openai.invoke(formattedPrompt);
-    const insight = result.content || "No insight generated.";
+    const outputParser = new HttpResponseOutputParser();
 
-    return NextResponse.json({ insight }, { status: 201 });
+    const chain = promptTemplate.pipe(openai).pipe(outputParser);
+
+    const stream = await chain.stream({
+      chat_history: formattedPrompt,
+      text: specificJournalEntry,
+    });
+
+    // Convert the stream to a format compatible with AI SD
+
+    // Return a StreamingTextResponse, which sets the appropriate headers and streams the response
+    return new NextResponse(stream, {
+      status: 200,
+    });
   } catch (error) {
     console.error("Unexpected error:", error);
     return NextResponse.json(

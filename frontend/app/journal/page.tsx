@@ -15,6 +15,8 @@ import { useProfile } from "@/providers/ProfileContext"; // Assuming the profile
 import { redirect } from "next/navigation";
 import JournalForm from "@/components/journal/Form";
 import JournalActions from "@/components/journal/SaveAndInsightsButtons";
+import DeleteConfirmationDialog from "@/components/journal/DeleteConfirmationDialog";
+import { useCompletion } from "ai/react";
 
 export default function JournalEditor() {
   const [title, setTitle] = useState("");
@@ -25,6 +27,8 @@ export default function JournalEditor() {
   const [insights, setInsights] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [showInsights, setShowInsights] = useState(false);
 
   const { incrementPoints } = useProfile(); // Access incrementPoints from ProfileContext
 
@@ -157,10 +161,13 @@ export default function JournalEditor() {
   };
 
   const handleDelete = async () => {
-    if (
-      selectedEntry &&
-      window.confirm("Are you sure you want to delete this entry?")
-    ) {
+    if (selectedEntry) {
+      setIsDeleteDialogOpen(true);
+    }
+  };
+
+  const confirmDelete = async () => {
+    if (selectedEntry) {
       const supabase = createClient();
 
       try {
@@ -176,41 +183,18 @@ export default function JournalEditor() {
       } catch (error: any) {
         console.error("Error deleting entry:", error);
         alert("Failed to delete the journal entry.");
+      } finally {
+        setIsDeleteDialogOpen(false);
       }
     }
   };
 
-  const handleAIInsights = async () => {
-    if (!userId || !selectedEntry) {
-      alert("User not authenticated or no entry selected.");
-      return;
-    }
+  const { complete, completion, isLoading } = useCompletion({
+    api: "/api/insights",
+  });
 
-    setLoading(true);
-
-    try {
-      const response = await axios.post("/api/insights", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: {
-          entryId: selectedEntry.id,
-          userId: userId,
-        },
-      });
-
-      if (response.status !== 201 && response.status !== 200) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      const { insight } = response.data; // Adjust based on your API response structure
-      setInsights(insight || ""); // Store insights in state
-    } catch (error) {
-      console.error("Error generating AI insights:", error);
-      alert(`Failed to generate insights. Please try again later.${error}`);
-    } finally {
-      setLoading(false);
-    }
+  const handleAIInsights = () => {
+    setShowInsights(true);
   };
 
   const resetFields = () => {
@@ -245,15 +229,22 @@ export default function JournalEditor() {
             {/* Tags and Word count */}
             <TagsAndWordCount tags={tags} setTags={setTags} content={content} />
             <JournalActions
-              loading={loading}
+              loading={isLoading}
               handleSave={handleSave}
               handleDelete={handleDelete}
               handleAIInsights={handleAIInsights}
             />
-            {insights && <AIInsights insights={insights} />}
+            {showInsights && selectedEntry && userId && (
+              <AIInsights entryId={selectedEntry.id} userId={userId} />
+            )}
           </Card>
         </div>
       </div>
+      <DeleteConfirmationDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 }
