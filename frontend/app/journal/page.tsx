@@ -199,11 +199,11 @@ export default function JournalEditor() {
         },
       });
 
-      if (response.status !== 201) {
+      if (response.status !== 201 && response.status !== 200) {
         throw new Error(`Error: ${response.status}`);
       }
 
-      const { insight } = await response.data; // Adjust based on your API response structure
+      const { insight } = response.data; // Adjust based on your API response structure
       setInsights(insight || ""); // Store insights in state
     } catch (error) {
       console.error("Error generating AI insights:", error);
