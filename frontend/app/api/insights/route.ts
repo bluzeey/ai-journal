@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Message as VercelChatMessage, Stre } from "ai";
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { createClient } from "@supabase/supabase-js";
-import { HttpResponseOutputParser } from "langchain/output_parsers";
+import { LangChainAdapter } from "ai";
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -16,14 +15,13 @@ export const runtime = "edge";
 const openai = new ChatOpenAI({
   apiKey: process.env.OPENAI_API_KEY,
   model: "gpt-4o-mini",
-  streaming: true,
 });
 
 export async function POST(request: NextRequest) {
   try {
     const requestBody = await request.json();
     console.log(requestBody.prompt);
-    const { entryId, userId } = JSON.parse(requestBody.prompt);
+    const { entryId, userId } = requestBody.prompt;
 
     if (!entryId || !userId) {
       return NextResponse.json(
@@ -99,21 +97,11 @@ export async function POST(request: NextRequest) {
       text: combinedEntriesText,
     });
 
-    const outputParser = new HttpResponseOutputParser();
+    const chain = promptTemplate.pipe(openai);
 
-    const chain = promptTemplate.pipe(openai).pipe(outputParser);
+    const stream = await chain.stream({ text: formattedPrompt });
 
-    const stream = await chain.stream({
-      chat_history: formattedPrompt,
-      text: specificJournalEntry,
-    });
-
-    // Convert the stream to a format compatible with AI SD
-
-    // Return a StreamingTextResponse, which sets the appropriate headers and streams the response
-    return new NextResponse(stream, {
-      status: 200,
-    });
+    return LangChainAdapter.toDataStreamResponse(stream);
   } catch (error) {
     console.error("Unexpected error:", error);
     return NextResponse.json(

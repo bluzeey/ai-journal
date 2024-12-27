@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { Card } from "@/components/ui/card";
 import { useCompletion } from "ai/react";
@@ -17,13 +17,13 @@ export default function AIInsights({ entryId, userId }: AIInsightsProps) {
   });
 
   useEffect(() => {
-    if (entryId && userId) {
-      complete({
-        entryId,
-        userId,
-      });
-    }
-  }, [entryId, userId, complete]);
+    const fetchInsights = () => {
+      if (entryId && userId) {
+        complete({ entryId, userId });
+      }
+    };
+    fetchInsights();
+  }, [entryId, userId]);
 
   return (
     <Card className="mt-4 p-6">
@@ -35,11 +35,9 @@ export default function AIInsights({ entryId, userId }: AIInsightsProps) {
         </div>
       )}
 
-      {completion && (
-        <ReactMarkdown className="prose dark:prose-invert max-w-none">
-          {completion}
-        </ReactMarkdown>
-      )}
+      <ReactMarkdown className="prose dark:prose-invert max-w-none">
+        {completion}
+      </ReactMarkdown>
     </Card>
   );
 }
