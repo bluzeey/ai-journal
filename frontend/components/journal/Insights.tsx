@@ -19,7 +19,7 @@ export default function AIInsights({ entryId, userId }: AIInsightsProps) {
   useEffect(() => {
     const fetchInsights = () => {
       if (entryId && userId) {
-        complete({ entryId, userId });
+        complete(`${entryId},${userId}`);
       }
     };
     fetchInsights();

@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
   try {
     const requestBody = await request.json();
     console.log(requestBody.prompt);
-    const { entryId, userId } = requestBody.prompt;
+    const [entryId, userId] = requestBody.prompt.split(",");
 
     if (!entryId || !userId) {
       return NextResponse.json(
