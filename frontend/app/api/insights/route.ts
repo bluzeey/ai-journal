@@ -9,7 +9,6 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
-export const runtime = "edge";
 
 // Initialize OpenAI client with streaming
 const openai = new ChatOpenAI({
