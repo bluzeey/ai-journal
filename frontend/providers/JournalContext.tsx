@@ -16,8 +16,10 @@ interface JournalContextType {
   currentStreak: number;
   recentMood: string;
   entries: JournalEntry[];
-  isLoggedIn: boolean; // Add logged-in state
-  fetchEntries: (userId: string) => Promise<void>; // Function to fetch entries
+  setEntries: React.Dispatch<React.SetStateAction<JournalEntry[]>>;
+  isLoggedIn: boolean;
+  fetchEntries: (userId: string) => Promise<void>;
+  userId: string | null;
 }
 
 const JournalContext = createContext<JournalContextType | undefined>(undefined);
@@ -30,92 +32,94 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({
   const [currentStreak, setCurrentStreak] = useState(0);
   const [recentMood, setRecentMood] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const pathname = usePathname();
 
-  // Function to fetch user data and entries
-  const fetchUserAndEntries = useCallback(async () => {
-    if (pathname != "/" && pathname != "/login") {
+  const fetchEntries = useCallback(
+    async (userId: string) => {
+      if (!userId) return;
+
       const supabase = createClient();
 
-      const {
-        data: { user },
-        error,
-      } = await supabase.auth.getUser();
+      const { data, error } = await supabase
+        .from("journal_entries")
+        .select("id, title, date, content, tags, word_count, mood")
+        .eq("user_id", userId)
+        .order("date", { ascending: false });
 
       if (error) {
-        console.error("Error fetching user:", error);
+        console.error("Error fetching journal entries:", error);
         return;
       }
 
-      setIsLoggedIn(!!user);
-      if (user != null) {
-        await fetchEntries(user.id); // Fetch entries if user is logged in
-      } else {
-        setEntries([]); // Clear entries if user is not logged in
-        setTotalEntries(0);
-        setRecentMood("");
-        setCurrentStreak(0);
-      } // Update logged-in state
-    }
-  }, [pathname]);
+      const formattedEntries = (data || []).map((entry: any) => ({
+        id: entry.id,
+        title: entry.title,
+        date: new Date(entry.date).toISOString().split("T")[0],
+        mood: entry.mood || "",
+        content: entry.content || "",
+        tags: entry.tags || [],
+        wordCount: entry.word_count || 0,
+      }));
 
-  // Fetch journal entries from Supabase
-  const fetchEntries = async (userId: string) => {
+      setEntries(formattedEntries);
+      setTotalEntries(formattedEntries.length);
+
+      const moods = formattedEntries.map((entry) => entry.mood);
+      setRecentMood(moods[0] || "");
+
+      const today = new Date();
+      const streak = formattedEntries.filter(
+        (entry) => new Date(entry.date).getDate() === today.getDate()
+      ).length;
+
+      setCurrentStreak(streak);
+    },
+    [userId]
+  );
+
+  const fetchUserAndEntries = useCallback(async () => {
     const supabase = createClient();
-    const { data, error } = await supabase
-      .from("journal_entries")
-      .select("id, title, date, content, tags, word_count, mood")
-      .eq("user_id", userId)
-      .order("date", { ascending: false });
+
+    const { data: userData, error } = await supabase.auth.getUser();
 
     if (error) {
-      console.error("Error fetching journal entries:", error);
+      console.error("Error fetching user:", error);
       return;
     }
 
-    const formattedEntries = (data || []).map((entry: any) => ({
-      id: entry.id,
-      title: entry.title,
-      date: new Date(entry.date).toISOString().split("T")[0],
-      mood: entry.mood || "",
-      content: entry.content || "",
-      tags: entry.tags || [],
-      wordCount: entry.word_count || 0,
-    }));
+    setIsLoggedIn(!!userData?.user);
 
-    setEntries(formattedEntries);
-    setTotalEntries(formattedEntries.length);
+    if (userData?.user) {
+      setUserId(userData.user.id);
+    } else {
+      setEntries([]);
+      setTotalEntries(0);
+      setRecentMood("");
+      setCurrentStreak(0);
+    }
+  }, [setEntries]);
 
-    // Set recent mood based on the latest entry
-    const moods = formattedEntries.map((entry) => entry.mood);
-    setRecentMood(moods[0] || "");
-
-    // Example logic for determining current streak
-    const today = new Date();
-    const streak = formattedEntries.filter(
-      (entry) => new Date(entry.date).getDate() === today.getDate()
-    ).length;
-
-    setCurrentStreak(streak);
-  };
-
-  // Use effect to fetch user data on mount and when user state changes
   useEffect(() => {
-    fetchUserAndEntries();
-  }, [fetchUserAndEntries]); // Run this on component mount
+    if (pathname !== "/" && pathname !== "/login") {
+      fetchUserAndEntries();
+      if (userId) {
+        fetchEntries(userId);
+      }
+    }
+  }, [pathname, fetchUserAndEntries, fetchEntries, userId]);
 
-  // Handle user login to re-fetch entries
   useEffect(() => {
-    const supabase = createClient(); // Assuming createClient returns supabase client
+    const supabase = createClient();
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      fetchUserAndEntries(); // Re-fetch user when authentication state changes
+      fetchUserAndEntries();
     });
 
     return () => {
-      subscription?.unsubscribe(); // Clean up subscription on unmount
+      subscription?.unsubscribe();
     };
   }, [fetchUserAndEntries]);
 
@@ -126,8 +130,10 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({
         currentStreak,
         recentMood,
         entries,
+        setEntries,
         isLoggedIn,
         fetchEntries,
+        userId,
       }}
     >
       {children}

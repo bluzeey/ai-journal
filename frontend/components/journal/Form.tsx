@@ -1,7 +1,16 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 
 interface JournalFormProps {
   title: string;
@@ -20,6 +29,8 @@ function JournalForm({
   tags,
   setTags,
 }: JournalFormProps) {
+  const [date, setDate] = useState<Date | undefined>(new Date());
+
   return (
     <>
       <div className="mb-4 flex items-center justify-between gap-8">
@@ -32,11 +43,25 @@ function JournalForm({
           }
           className="w-2/3 text-2xl font-bold bg-white dark:bg-gray-700 dark:text-white"
         />
-        <Input
-          type="datetime-local"
-          defaultValue={new Date().toISOString().slice(0, 16)}
-          className="w-1/5 bg-white dark:bg-gray-700 dark:text-white"
-        />
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={`w-[280px] justify-start text-left font-normal bg-white dark:bg-gray-700 dark:text-white`}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? format(date, "PPP") : <span>Pick a date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
       </div>
       <Textarea
         placeholder="Write your journal entry here..."

@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react"; // Import useEffect for fetching entries
-import { ChevronLeft, ChevronRight, Search, Plus } from "lucide-react"; // Added Plus icon
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
+import { ChevronLeft, ChevronRight, Search, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { createClient } from "@/utils/supabase/client"; // Ensure this imports your Supabase client
 import { JournalEntry } from "@/lib/definitions";
 
 const generateRandomColor = () => {
@@ -23,7 +22,7 @@ interface JournalSidebarProps {
   entries: JournalEntry[];
   setEntries: React.Dispatch<React.SetStateAction<JournalEntry[]>>;
   onSelectEntry: (entry: JournalEntry) => void;
-  onAddEntry: () => void;
+  onAddEntry: (entry: JournalEntry) => void;
 }
 
 export default function JournalSidebar({
@@ -36,49 +35,23 @@ export default function JournalSidebar({
   const [searchTerm, setSearchTerm] = useState("");
   const [tagColorsMap, setTagColorsMap] = useState<{ [key: string]: string }>(
     {}
-  ); // To hold each tag's color
+  );
+  const [newEntryId, setNewEntryId] = useState<string | null>(null);
 
-  // Fetch existing journal entries
   useEffect(() => {
-    const fetchEntries = async () => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from("journal_entries")
-        .select("id, title, date, content, tags, word_count")
-        .order("date", { ascending: false });
-
-      if (error) {
-        console.error("Error fetching entries:", error);
-      } else {
-        const formattedEntries = data.map((entry: any) => ({
-          id: entry.id,
-          title: entry.title,
-          date: new Date(entry.date).toISOString().split("T")[0],
-          content: entry.content,
-          snippet: entry.content.substring(0, 100) + "...",
-          tags: entry.tags || [],
-          wordCount: entry.word_count,
-        }));
-
-        setEntries(formattedEntries);
-
-        // Generate and set tag colors for unique tags
-        const colorsMap: { [key: string]: string } = {};
-        formattedEntries.forEach((entry) => {
-          entry.tags.forEach((tag: string) => {
-            if (!colorsMap[tag]) {
-              colorsMap[tag] = generateRandomColor();
-            }
-          });
+    setTagColorsMap((prevColorsMap) => {
+      const newColorsMap = { ...prevColorsMap };
+      entries.forEach((entry) => {
+        entry.tags.forEach((tag: string) => {
+          if (!newColorsMap[tag]) {
+            newColorsMap[tag] = generateRandomColor();
+          }
         });
-        setTagColorsMap(colorsMap);
-      }
-    };
+      });
+      return newColorsMap;
+    });
+  }, [entries]); //
 
-    fetchEntries();
-  }, []); // Only run once on mount
-
-  // Filter entries based on the search term
   const filteredEntries = entries.filter(
     (entry) =>
       entry.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -87,10 +60,33 @@ export default function JournalSidebar({
       )
   );
 
-  // Function to handle adding a new entry with placeholder text
+  const handleAddEntry = () => {
+    const lastId = entries.length > 0 ? parseInt(entries[0].id) : 0;
+    const newEntryIdProp = lastId + 1;
+
+    const newEntry = {
+      id: newEntryIdProp.toString(),
+      title: "New Entry",
+      date: new Date().toISOString(),
+      content: "This is a new entry...",
+      snippet: "This is a new entry...",
+      tags: [],
+      wordCount: 0,
+    };
+
+    // Update both local state and optionally reflect immediate state change
+    setEntries((prevEntries) => [newEntry, ...prevEntries]);
+    setNewEntryId(newEntry.id);
+
+    // Trigger the UI-level animation
+    onAddEntry(newEntry); // Updated to allow UI-level animation without immediate re-fetch
+  };
+
   return (
     <div
-      className={`border-r bg-white dark:bg-gray-800 transition-all duration-300 ${isCollapsed ? "w-16" : "w-64"} border-gray-200 dark:border-gray-700`}
+      className={`border-r bg-white dark:bg-gray-800 transition-all duration-300 ${
+        isCollapsed ? "w-16" : "w-64"
+      } border-gray-200 dark:border-gray-700`}
     >
       <div className="flex items-center justify-between border-b p-4 border-gray-200 dark:border-gray-700">
         {!isCollapsed && (
@@ -119,7 +115,7 @@ export default function JournalSidebar({
         <Button
           variant="ghost"
           className="mb-4 flex items-center"
-          onClick={onAddEntry} // Call handleAddEntry on click
+          onClick={handleAddEntry}
         >
           <Plus className="mr-2" /> Add New Entry
         </Button>
@@ -128,7 +124,9 @@ export default function JournalSidebar({
         {filteredEntries.map((entry) => (
           <div
             key={entry.id}
-            className="cursor-pointer border-b p-4 hover:bg-gray-100 dark:hover:bg-gray-700"
+            className={`cursor-pointer border-b p-4 hover:bg-gray-100 dark:hover:bg-gray-700 ${
+              entry.id === newEntryId ? "fade-in-up" : ""
+            }`}
             onClick={() => onSelectEntry(entry)}
           >
             {!isCollapsed && (
@@ -140,7 +138,7 @@ export default function JournalSidebar({
                   {entry.date}
                 </p>
                 <p className="truncate text-sm text-gray-600 dark:text-gray-300">
-                  {entry.snippet}
+                  {entry.content}
                 </p>
                 <div className="mt-2 flex flex-wrap">
                   {entry.tags?.map((tag) => (

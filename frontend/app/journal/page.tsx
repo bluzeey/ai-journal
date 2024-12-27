@@ -17,6 +17,7 @@ import JournalForm from "@/components/journal/Form";
 import JournalActions from "@/components/journal/SaveAndInsightsButtons";
 import DeleteConfirmationDialog from "@/components/journal/DeleteConfirmationDialog";
 import { useCompletion } from "ai/react";
+import { useJournal } from "@/providers/JournalContext";
 
 export default function JournalEditor() {
   const [title, setTitle] = useState("");
@@ -26,7 +27,7 @@ export default function JournalEditor() {
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
   const [insights, setInsights] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const { entries, setEntries } = useJournal();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [showInsights, setShowInsights] = useState(false);
 
@@ -68,25 +69,11 @@ export default function JournalEditor() {
     }
   }, [selectedEntry]);
 
-  const addNewEntry = async () => {
+  const addNewEntry = async (newEntry: JournalEntry) => {
     if (!userId) {
       alert("User not authenticated. Please log in.");
       return;
     }
-
-    const newEntry: JournalEntry = {
-      id: Date.now().toString(),
-      title: "New Entry", // Placeholder title
-      date: new Date().toISOString(),
-      content: "", // Empty content
-      snippet: "", // Empty snippet for display
-      tags: [], // No tags by default
-      wordCount: 0, // Zero word count
-    };
-
-    // Optimistic UI update
-    setEntries((prevEntries) => [newEntry, ...prevEntries]);
-    setSelectedEntry(newEntry);
 
     try {
       const supabase = createClient();
@@ -185,6 +172,7 @@ export default function JournalEditor() {
         alert("Failed to delete the journal entry.");
       } finally {
         setIsDeleteDialogOpen(false);
+        window.location.reload();
       }
     }
   };
@@ -213,8 +201,8 @@ export default function JournalEditor() {
         <JournalSidebar
           entries={entries}
           setEntries={setEntries}
-          onAddEntry={addNewEntry}
-          onSelectEntry={setSelectedEntry}
+          onAddEntry={(entry: JournalEntry) => addNewEntry(entry)}
+          onSelectEntry={(entry: JournalEntry) => setSelectedEntry(entry)}
         />
         <div className="flex-1 overflow-auto p-6">
           <Card className="p-6 bg-white dark:bg-gray-800">
