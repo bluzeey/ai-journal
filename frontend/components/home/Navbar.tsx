@@ -10,7 +10,7 @@ export function Navbar() {
     <nav className="relative bg-white bg-opacity-30 rounded-full max-w-4xl mx-auto w-full z-10 ">
       <div className="mt-10 w-full py-4 px-8 shadow-md mx-auto -mt-2 rounded-full">
         {/* Adjusted margin for overlapping effect */}
-        <div className="flex w-full justify-around items-center">
+        <div className="flex w-full justify-between items-center">
           <Image
             src={Logo.src}
             width={125}
@@ -18,7 +18,7 @@ export function Navbar() {
             alt="Logo"
             className="text-white"
           />{" "}
-          <div className="flex space-x-8">
+          <div className="flex items-center space-x-8">
             <Link
               href="/features"
               className="z-10 text-white font-bold hover:underline"
@@ -31,12 +31,12 @@ export function Navbar() {
             <Link href="/testimonials" className="text-white hover:underline">
               Testimonials
             </Link>
+            <Link href="/journal">
+              <button className="bg-[#2A5285] bg-opacity-75  border-2 border-white text-white hover:bg-gray-200 py-2 px-4 rounded-lg mx-2">
+                Start Journaling
+              </button>
+            </Link>
           </div>
-          <Link href="/journal">
-            <button className="bg-[#2A5285] bg-opacity-75  border-2 border-white text-white hover:bg-gray-200 py-2 px-4 rounded-lg mx-2">
-              Start Journaling
-            </button>
-          </Link>
         </div>
       </div>
     </nav>

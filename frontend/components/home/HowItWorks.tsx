@@ -14,20 +14,20 @@ export function HowItWorks() {
       title: "Write your journal entry",
       description:
         "Express your thoughts and feelings freely in our intuitive text editor.",
-      imageSrc: HowItWorks1,
+      image: HowItWorks3,
       icon: <Laptop className="h-8 w-8 text-blue-500" />,
     },
     {
       title: "Click 'Analyze'",
       description:
         "Our AI processes your entry to generate personalized insights.",
-      imageSrc: HowItWorks2,
+      image: HowItWorks1,
       icon: <CheckCircle className="h-8 w-8 text-blue-500" />,
     },
     {
       title: "Reflect on AI insights",
       description: "Gain new perspectives and deepen your self-understanding.",
-      imageSrc: HowItWorks3,
+      image: HowItWorks2,
       icon: <Eye className="h-8 w-8 text-blue-500" />,
     },
   ];
@@ -42,8 +42,8 @@ export function HowItWorks() {
           {steps.map((step, index) => (
             <div
               key={index}
-              className="relative flex flex-col items-center p-6 rounded-lg bg-cover bg-center"
-              style={{ backgroundImage: `url(${step.imageSrc})` }}
+              className="relative flex flex-col items-center p-6 rounded-lg bg-cover bg-bottom min-h-[500px]"
+              style={{ backgroundImage: `url(${step.image.src})` }}
             >
               <div className="absolute top-0 left-0 right-0 bottom-0 bg-blue-500 opacity-30 rounded-lg" />{" "}
               {/* Background overlay */}
@@ -54,18 +54,6 @@ export function HowItWorks() {
                 <p className="mt-2 py-4 text-2xl text-[#88BCFB] font-normal ">
                   {step.description}
                 </p>
-              </div>
-              <Image
-                src={step.imageSrc}
-                alt={step.title}
-                width={400} // Adjust size as needed
-                height={400} // Adjust size as needed
-                className="rounded-lg"
-              />
-              <div className="absolute bg-blue-600 text-white rounded-md left-0 bottom-0 p-2 w-16 h-16 flex items-center justify-center text-lg">
-                {" "}
-                {/* Create a square for numbers */}
-                {index + 1} {/* Display the index number (1-based) */}
               </div>
             </div>
           ))}
