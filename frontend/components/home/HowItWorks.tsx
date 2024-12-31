@@ -42,7 +42,7 @@ export function HowItWorks() {
           {steps.map((step, index) => (
             <div
               key={index}
-              className="relative flex flex-col items-center p-6 rounded-lg bg-cover bg-bottom min-h-[500px]"
+              className="relative flex flex-col gap-8 items-center p-4 rounded-lg bg-bottom bg-cover min-h-[500px] max-w-[400px] mx-auto"
               style={{ backgroundImage: `url(${step.image.src})` }}
             >
               <div className="absolute top-0 left-0 right-0 bottom-0 bg-blue-500 opacity-30 rounded-lg" />{" "}
