@@ -13,7 +13,7 @@ export function HowItWorks() {
     {
       title: "Write your journal entry",
       description:
-        "Express your thoughts and feelings freely in our intuitive text editor.",
+        "Express your thoughts & feelings freely in our text editor.",
       image: HowItWorks3,
       icon: <Laptop className="h-8 w-8 text-blue-500" />,
     },
@@ -40,7 +40,7 @@ export function HowItWorks() {
         </h2>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {steps.map((step, index) => (
-            <div className="bg-[#052750] border border-[#88BCFB] rounded-xl p-6">
+            <div className="bg-[#052750] border border-[#88BCFB] rounded-xl pt-6 pr-6 pl-6">
               <div className="relative z-10 text-center">
                 <h3 className="text-3xl font-semibold text-white dark:text-white">
                   {step.title}
@@ -51,10 +51,9 @@ export function HowItWorks() {
               </div>
               <div
                 key={index}
-                className="relative flex flex-col gap-8 -m-6 items-center rounded-lg bg-bottom bg-cover min-h-[350px] w-full mx-auto"
+                className="relative flex flex-col gap-8 -mt-6 -ml-6 -mr-6 items-center rounded-lg bg-cover  min-h-[400px] min-w-full opacity-50 hover:opacity-100 rounded-full"
                 style={{ backgroundImage: `url(${step.image.src})` }}
               >
-                <div className="absolute top-0 left-0 right-0 bottom-0 bg-[#052750] w-full h-full opacity-30 rounded-lg " />{" "}
                 {/* Background overlay */}
               </div>
             </div>
