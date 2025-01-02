@@ -24,7 +24,7 @@ export default function Cta() {
         </p>
         <div className="flex justify-center space-x-4">
           <Link href="/journal">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white py-6 px-12 text-2xl rounded-full shadow-lg transition duration-200 ease-in-out transform hover:scale-105">
+            <button className="bg-gradient-to-b from-blue-500 to-blue-700 text-white font-semibold py-4 px-8 rounded-full shadow-lg transform transition-transform duration-200 hover:scale-105">
               Get Started
             </button>
           </Link>

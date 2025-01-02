@@ -32,7 +32,7 @@ export function Navbar() {
               Testimonials
             </Link>
             <Link href="/journal">
-              <button className="bg-[#2A5285] bg-opacity-75  border-2 border-white text-white hover:bg-gray-200 py-2 px-4 rounded-lg mx-2">
+              <button className="bg-[#2A5285] bg-opacity-75  border-2 border-white text-white hover:bg-gray-200 py-2 px-5 rounded-lg mx-2">
                 Start Journaling
               </button>
             </Link>
