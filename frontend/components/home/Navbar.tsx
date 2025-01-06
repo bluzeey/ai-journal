@@ -7,16 +7,25 @@ import { useState, useEffect } from "react";
 import { MenuIcon } from "lucide-react";
 
 export function Navbar() {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleResize = () => {
-    setIsMobile(window.innerWidth < 768);
-  };
-
   useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    // This will run only on the client
+    function handleResize() {
+      setIsMobile(window.innerWidth < 768);
+    }
+
+    if (typeof window !== "undefined") {
+      // Set initial value when component is mounted
+      handleResize();
+
+      // Add event listener
+      window.addEventListener("resize", handleResize);
+
+      // Clean up event listener on unmount
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, []);
 
   return (
@@ -83,3 +92,5 @@ export function Navbar() {
     </nav>
   );
 }
+
+export default Navbar;

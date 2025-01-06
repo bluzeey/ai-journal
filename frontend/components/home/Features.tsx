@@ -26,15 +26,16 @@ export function Features() {
   return (
     <section className="bg-[#031F40] text-white py-20">
       <div className="container mx-auto px-6 text-center">
-        <h2 className="text-4xl font-bold mb-8">Key Features</h2>
+        <h2 className="text-2xl sm:text-4xl font-bold mb-8">Key Features</h2>
         <div className="grid gap-6 md:grid-cols-3">
           {features.map((feature, index) => (
             <div
               key={index}
               className="flex flex-col items-center bg-transparent p-6 rounded-lg"
             >
-              <div className="flex items-center justify-center w-20 h-20 bg-blue-200 rounded-full mb-4 border border-white">
-                <feature.icon className="h-10 w-10 text-blue-600 " />
+              <div className="flex items-center justify-center w-12 h-12 sm:w-20 sm:h-20 bg-blue-200 rounded-full mb-4 border border-white ">
+                <div className="relative w-12 h-12 -inset-1 rounded-md blur-md bg-gradient-to-br from-white via-white to-white z-10"></div>
+                <feature.icon className="h-5 w-5 sm:h-10 sm:w-10 text-blue-600  " />
               </div>
               <CardHeader>
                 <CardTitle className="text-2xl font-semibold mt-4">
