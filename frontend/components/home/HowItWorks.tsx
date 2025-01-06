@@ -53,7 +53,7 @@ export function HowItWorks() {
                 </p>
               </div>
               <div
-                className="relative flex flex-col gap-8  -mx-6 -mb-8 items-center rounded-lg bg-cover min-h-[400px] opacity-50 hover:opacity-100 rounded-full"
+                className="relative flex flex-col gap-8  -mx-6 -mt-8 items-center rounded-lg bg-cover min-h-[400px] opacity-50 hover:opacity-100 rounded-full"
                 style={{ backgroundImage: `url(${step.image.src})` }}
               >
                 {/* Background overlay */}
