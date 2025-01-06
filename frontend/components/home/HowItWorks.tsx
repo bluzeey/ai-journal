@@ -38,9 +38,12 @@ export function HowItWorks() {
         <h2 className="mb-12 text-center text-3xl font-bold tracking-tighter text-white dark:text-white sm:text-5xl">
           How It Works
         </h2>
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="overflow-x-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {steps.map((step, index) => (
-            <div className="bg-[#052750] border border-[#88BCFB] rounded-xl pt-6 pr-6 pl-6">
+            <div
+              key={index}
+              className="bg-[#052750] border border-[#88BCFB] rounded-xl pt-6 pr-6 pl-6 col-span-1"
+            >
               <div className="relative z-10 text-center">
                 <h3 className="text-3xl font-semibold text-white dark:text-white">
                   {step.title}
@@ -50,8 +53,7 @@ export function HowItWorks() {
                 </p>
               </div>
               <div
-                key={index}
-                className="relative flex flex-col gap-8 -mt-6 -ml-6 -mr-6 items-center rounded-lg bg-cover  min-h-[400px] min-w-full opacity-50 hover:opacity-100 rounded-full"
+                className="relative flex flex-col gap-8 -mt-6 -mx-6 items-center rounded-lg bg-cover min-h-[400px] opacity-50 hover:opacity-100 rounded-full"
                 style={{ backgroundImage: `url(${step.image.src})` }}
               >
                 {/* Background overlay */}
