@@ -34,7 +34,7 @@ export function Features() {
               className="flex flex-col items-center bg-transparent p-6 rounded-lg"
             >
               <div className="flex items-center justify-center w-12 h-12 sm:w-20 sm:h-20 bg-blue-200 rounded-full mb-4 border border-white ">
-                <div className="absolute w-16 h-16 rounded-full blur-sm bg-gradient-to-br from-white via-white to-white z-1"></div>
+                <div className="absolute w-12 h-12 sm:w-20 sm:h-20 rounded-full blur-sm bg-gradient-to-br from-white/20 via-white/50 to-white/70 z-1"></div>
                 <feature.icon className="h-5 w-5 sm:h-10 sm:w-10 text-blue-600 z-10" />
               </div>
               <CardHeader>
