@@ -19,8 +19,8 @@ import Cta from "@/components/home/Cta";
 
 export default function LandingPage() {
   return (
-    <div className="flex min-h-screen  flex-col ">
-      <main className="flex-1 ">
+    <div className="min-h-screen">
+      <main className="">
         <Hero />
         {/* New Section: Mental Health and Prominent Figures */}
         <BenefitsSection />
@@ -28,7 +28,6 @@ export default function LandingPage() {
         {/* Remaining sections unchanged */}
         <HowItWorks />
         <Cta />
-        <Footer />
       </main>
     </div>
   );

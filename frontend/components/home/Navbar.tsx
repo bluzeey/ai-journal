@@ -4,7 +4,7 @@ import Link from "next/link";
 import Logo from "@/app/images/logo.png";
 import Image from "next/image"; // Optional for theme switching
 import { useState, useEffect } from "react";
-import { MenuIcon } from "lucide-react";
+import { MenuIcon, XIcon } from "lucide-react";
 
 export function Navbar() {
   const [isMobile, setIsMobile] = useState(false);
@@ -41,7 +41,7 @@ export function Navbar() {
           />
           {isMobile ? (
             <button onClick={() => setIsOpen(!isOpen)} className="text-white">
-              {isOpen ? "Close" : <MenuIcon />}
+              {isOpen ? <XIcon /> : <MenuIcon />}
             </button>
           ) : (
             <div className="flex items-center space-x-8">
@@ -66,8 +66,8 @@ export function Navbar() {
           )}
         </div>
         {isOpen && (
-          <div className="absolute top-0 left-0 w-full mt-20 bg-white bg-opacity-50">
-            <div className="flex flex-col items-center space-y-4 p-4">
+          <div className="absolute top-0 left-0 w-full mt-20 bg-white bg-opacity-50 rounded-lg w-4/5">
+            <div className="relative flex flex-col items-center space-y-4 p-4">
               <Link
                 href="/features"
                 className="text-white font-bold hover:underline"

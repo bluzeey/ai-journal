@@ -9,7 +9,7 @@ export default function HeroSection() {
       className="relative flex flex-col items-center justify-center h-screen bg-cover bg-center"
       style={{ backgroundImage: `url(${bg.src})` }}
     >
-      <div className="absolute top-0 w-full mt-10 mb-20">
+      <div className="relative top-0 w-full mt-10 mb-20">
         {/* Center the navbar */}
         <Navbar />
       </div>

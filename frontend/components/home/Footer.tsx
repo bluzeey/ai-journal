@@ -3,10 +3,15 @@ import Link from "next/link";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="flex flex-wrap max-w-5xl items-center gap-4 mx-auto text-white justify-around -mt-20  px-4  md:px-6">
-      <p className="z-10 text-md">© 2024 AI Journal. All rights reserved.</p>
-      <p className="z-10 text-md">Made with ❤️ from India</p>
-      <nav className="flex gap-4 sm:ml-auto !text-white items-center sm:gap-6">
+    <footer className="flex flex-col sm:flex-row max-w-5xl items-center gap-4 mx-auto text-white justify-center md:px-6 mb-10 w-full">
+      <p className="z-10 text-md order-2 sm:order-0">
+        © 2024 AI Journal. All rights reserved.
+      </p>
+
+      <p className="z-10 text-md order-1 sm:order-0 ">
+        Made with ❤️ from India
+      </p>
+      <div className="flex gap-4 !text-white items-center sm:gap-6 sm:order-0">
         <Link
           className="z-10  text-md !text-white underline-offset-4 hover:underline"
           href="https://discord.gg/5DXkJHgG"
@@ -36,7 +41,7 @@ const Footer: React.FC = () => {
         >
           Privacy
         </Link>
-      </nav>
+      </div>
     </footer>
   );
 };
