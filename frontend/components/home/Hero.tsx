@@ -1,5 +1,5 @@
 "use client";
-import bg from "@/app/images/hero-bg.png";
+import bg from "@/public/images/hero-bg.png";
 import Link from "next/link";
 import { Navbar } from "./Navbar"; // Import the Navbar component
 import { useState } from "react";

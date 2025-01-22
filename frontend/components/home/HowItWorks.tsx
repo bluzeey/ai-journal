@@ -3,9 +3,9 @@
 import { Card } from "@/components/ui/card";
 import Image from "next/image"; // Import Image for optimized loading
 import { Laptop, CheckCircle, Eye } from "lucide-react";
-import HowItWorks1 from "@/app/images/howitworks/1.png";
-import HowItWorks2 from "@/app/images/howitworks/2.png";
-import HowItWorks3 from "@/app/images/howitworks/3.png";
+import HowItWorks1 from "@/public/images/howitworks/1.png";
+import HowItWorks2 from "@/public/images/howitworks/2.png";
+import HowItWorks3 from "@/public/images/howitworks/3.png";
 // Import icons
 
 export function HowItWorks() {

@@ -2,10 +2,6 @@
 
 import Image from "next/image"; // Import Image component from Next.js
 import Link from "next/link";
-import Benefit1 from "@/app/images/benefits/benefit-1.png";
-import Benefit2 from "@/app/images/benefits/benefit-2.png";
-import Benefit3 from "@/app/images/benefits/benefit-3.png";
-import Benefit4 from "@/app/images/benefits/benefit-4.png";
 import { Check, CircleAlert, MessageCircle } from "lucide-react"; // Import the check icon from Lucide
 
 export function BenefitsSection() {
@@ -15,18 +11,18 @@ export function BenefitsSection() {
         <div className="flex justify-between mt-10">
           <div className="flex flex-col items-center hidden lg:block">
             <Image
-              src={Benefit1.src}
+              src={`/images/benefits/benefit-1.png`}
               alt="Reduce stress & anxiety"
-              width={400}
-              height={400}
-              className="rounded-lg"
+              width={500}
+              height={500}
+              className="rounded-lg h-[100px] w-[100px] md:h-[300px] md:w-[400px]"
             />
             <Image
-              src={Benefit2.src}
+              src={`/images/benefits/benefit-4.png`}
               alt="Improve problem-solving skills"
               width={500}
               height={500}
-              className="rounded-lg -mt-8 -ml-16"
+              className="rounded-lg -mt-8 -ml-16  h-[100px] w-[100px] md:h-[300px] md:w-[400px]"
             />
           </div>
 
@@ -85,18 +81,18 @@ export function BenefitsSection() {
 
           <div className="flex flex-col items-center hidden lg:block">
             <Image
-              src={Benefit3.src}
+              src={`/images/benefits/benefit-3.png`}
               alt="Gain clarity for better decisions"
-              width={400}
-              height={400}
-              className="rounded-lg"
+              width={500}
+              height={500}
+              className="rounded-lg  h-[100px] w-[100px] md:h-[300px] md:w-[400px]"
             />
             <Image
-              src={Benefit4.src}
+              src={`/images/benefits/benefit-2.png`}
               alt="Enhance creativity"
               width={500}
               height={500}
-              className="rounded-lg -mt-8 ml-16"
+              className="rounded-lg -mt-8 ml-16  h-[100px] w-[100px] md:h-[300px] md:w-[400px]"
             />
           </div>
         </div>

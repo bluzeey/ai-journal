@@ -1,5 +1,5 @@
 "use client";
-import bg from "@/app/images/cta-bg.png";
+import bg from "@/public/images/cta-bg.png";
 import Link from "next/link";
 import Footer from "./Footer";
 // Import ChevronRight icon from lucide-react
