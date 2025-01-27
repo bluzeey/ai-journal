@@ -47,15 +47,15 @@ export function Navbar({ isOpen, setIsOpen }: NavbarProps) {
           ) : (
             <div className="flex items-center space-x-8">
               <Link
-                href="/features"
+                href="/#"
                 className="z-10 text-white font-bold hover:underline"
               >
                 Features
               </Link>
-              <Link href="/how-it-works" className="text-white hover:underline">
+              <Link href="/#" className="text-white hover:underline">
                 How it Works
               </Link>
-              <Link href="/testimonials" className="text-white hover:underline">
+              <Link href="/#" className="text-white hover:underline">
                 Testimonials
               </Link>
               <Link href="/journal">
